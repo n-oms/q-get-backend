@@ -31,4 +31,4 @@ RUN yarn global add pm2
 EXPOSE 8000
 
 # Command to run the application
-CMD ["pm2-runtime", "bin/app.js"]
+CMD ["pm2-runtime", "bin/index.js"]
