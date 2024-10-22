@@ -7,6 +7,8 @@ import { IHandler } from "@/libs/types/common";
 import { validate } from "@/libs/validations/api";
 import { authorizeRequest } from "@/middlewares/authorizer/authorizer";
 import { Express } from "express";
+import {MobileVersionHandler} from '@/handlers/mobile-version';
+
 
 const MAP_KEY_PAIR = [
     [Operations.CREATE, HTTP_METHODS.POST], [Operations.REPLACE, HTTP_METHODS.PUT],
@@ -34,5 +36,6 @@ function getAllRouteHandlers(): Array<IHandler> {
     const routeHandlers: Array<IHandler> = [];
     routeHandlers.push(new OtpApiHandler());
     routeHandlers.push(new GetDashboardDataHandler());
+    routeHandlers.push(new MobileVersionHandler());
     return routeHandlers;
 }

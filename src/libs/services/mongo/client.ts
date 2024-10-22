@@ -6,6 +6,7 @@ export class MongoDbClient {
     static async initiazeConnect() {
         try {
             const dbUrl = env.MONGO_DB_URL;
+            console.log("db url",dbUrl);
             if (!dbUrl) {
                 throw new EnvNotFoundError("MONGO_DB_URL not found in env");
             }
