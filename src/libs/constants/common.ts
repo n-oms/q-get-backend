@@ -26,4 +26,7 @@ export const HTTP_METHODS = {
     UPDATE: 'update',
     INVOKE: 'invoke',
   };
+  export const HTTP_RESOURCES = {
+    MOBILE_VERSION: 'mobile-version',
+  };
   

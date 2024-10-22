@@ -5,6 +5,8 @@ import { errorHandler } from "@/libs/error/errorHandler";
 import { IHandler } from "@/libs/types/common";
 import { validate } from "@/libs/validations/api";
 import { Express } from "express";
+import {MobileVersionHandler} from '@/handlers/mobile-version';
+
 
 const MAP_KEY_PAIR = [
     [Operations.CREATE, HTTP_METHODS.POST], [Operations.REPLACE, HTTP_METHODS.PUT],
@@ -30,5 +32,6 @@ export const registerRoutes = function (app: Express) {
 function getAllRouteHandlers(): Array<IHandler> {
     const routeHandlers: Array<IHandler> = [];
     routeHandlers.push(new OtpApiHandler());
+    routeHandlers.push(new MobileVersionHandler());
     return routeHandlers;
 }
