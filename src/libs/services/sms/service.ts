@@ -12,6 +12,7 @@ import {
 import { env } from "@/env/env";
 import { OtpDBService } from "../otp/service";
 import { UserService } from "../user/service";
+import { users } from "../mongo/schema";
 
 export class SmsClient {
   private readonly apiKey: string;
@@ -174,20 +175,24 @@ export class SmsClient {
     }
 
     await this.otpDbClient.updateOtpEntry({ phoneNumber, verified: true });
-    return { status: OTP_RESPONSE_CODES.OTP_VERIFIED, isValid };
+
+    // Getting the verified user info from the database
+    const user = await users.findOne({ phoneNumber })
+
+    return { status: OTP_RESPONSE_CODES.OTP_VERIFIED, isValid, user: user.toJSON() };
   }
 
   async sendOtp({ to, code }: { to: string; code: string }) {
     const template = this.getOtpTemplate(code);
     const templateId = env.SMS_OTP_TEMPLATE_ID;
-    console.log(to, code, template, templateId);
+
     const url = this.createMessageUrl({
       to,
       message: template,
       messageType: MessageType.Otp,
       templateId,
     });
-    console.log(url);
+
     try {
       const res = await this.send(url);
 

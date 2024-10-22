@@ -27,7 +27,7 @@ export class OtpApiHandler implements IHandler {
 
         const action = req.body.action;
         const phoneNumber = req.body.phoneNumber;
-
+        
         try {
 
             if (!action) {
