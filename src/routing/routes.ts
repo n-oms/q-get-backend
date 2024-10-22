@@ -1,9 +1,11 @@
 import { OtpApiHandler } from "@/handlers";
+import { GetDashboardDataHandler } from "@/handlers/dashboard/vendors/get/handler";
 import { APP_CONSTANTS, HTTP_METHODS } from "@/libs/constants/common";
 import { Operations } from "@/libs/enums/common";
 import { errorHandler } from "@/libs/error/errorHandler";
 import { IHandler } from "@/libs/types/common";
 import { validate } from "@/libs/validations/api";
+import { authorizeRequest } from "@/middlewares/authorizer/authorizer";
 import { Express } from "express";
 
 const MAP_KEY_PAIR = [
@@ -21,6 +23,7 @@ export const registerRoutes = function (app: Express) {
         const relativePath = `/${API_VERSION}/${element.resource}`;
         app[httpMethod](
             relativePath,
+            element.isAuthorized ? authorizeRequest : (req, res, next) => next(),
             validate(element.validations), element.handler);
     });
     app.use(errorHandler);
@@ -30,5 +33,6 @@ export const registerRoutes = function (app: Express) {
 function getAllRouteHandlers(): Array<IHandler> {
     const routeHandlers: Array<IHandler> = [];
     routeHandlers.push(new OtpApiHandler());
+    routeHandlers.push(new GetDashboardDataHandler());
     return routeHandlers;
 }

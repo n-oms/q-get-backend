@@ -28,3 +28,13 @@ export class ConnectionError extends Error {
     }
 }
 
+export class NotProvidedError extends Error {
+    statusCode: number;
+
+    constructor(message: string) {
+        super(message);
+        this.name = 'NotProvidedError';
+        this.statusCode = 400; 
+    }
+}
+

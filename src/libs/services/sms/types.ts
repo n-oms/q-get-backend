@@ -32,6 +32,7 @@ export type InitOtpVerificationResponse = {
 export type VerifyOtp = {
   phoneNumber: string;
   code: string;
+  generateToken?: boolean;
 };
 
 export type SendWelcomeMessageType = {

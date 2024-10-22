@@ -5,7 +5,6 @@ import { SmsClient } from "@/libs/services/sms/service";
 import { BadRequestExecption } from "@/libs/error/error";
 import { HTTP_RESOURCES } from "@/libs/constants/resources";
 
-
 export class OtpApiHandler implements IHandler {
     operation: Operations;
     isIdempotent: boolean;
@@ -27,7 +26,7 @@ export class OtpApiHandler implements IHandler {
 
         const action = req.body.action;
         const phoneNumber = req.body.phoneNumber;
-        
+
         try {
 
             if (!action) {
@@ -54,7 +53,8 @@ export class OtpApiHandler implements IHandler {
                     }
                     const result = await this.smsClient.verifyOtp({
                         code,
-                        phoneNumber
+                        phoneNumber,
+                        generateToken: true
                     })
                     return res.status(200).send(result);
                 }

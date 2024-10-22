@@ -9,4 +9,6 @@ export const env = {
     SMS_SENDER_ID: process.env.SMS_SENDER_ID,
     SMS_TATA_TEL_PE_ID: process.env.SMS_TATA_TEL_PE_ID,
     MONGO_DB_URL: process.env.MONGO_DB_URL,
+    JWT_SECRET: process.env.JWT_SECRET,
+    JWT_EXPIRY: process.env.JWT_EXPIRY,
 }

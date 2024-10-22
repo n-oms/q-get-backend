@@ -13,12 +13,14 @@ import { env } from "@/env/env";
 import { OtpDBService } from "../otp/service";
 import { UserService } from "../user/service";
 import { users } from "../mongo/schema";
+import { JwtService } from "../jwt/jwtService";
 
 export class SmsClient {
   private readonly apiKey: string;
   private readonly apiUrl: string;
   private readonly otpDbClient: OtpDBService;
   private readonly userService: UserService
+  private readonly jwtService: JwtService
   static client: SmsClient;
   constructor() {
     this.apiKey = env.SMS_API_KEY;
@@ -32,6 +34,7 @@ export class SmsClient {
     this.initOtpVerification = this.initOtpVerification.bind(this);
     this.verifyOtp = this.verifyOtp.bind(this);
     this.send = this.send.bind(this);
+    this.jwtService = new JwtService()
     this.userService = new UserService()
   }
 
@@ -153,7 +156,7 @@ export class SmsClient {
     return { status: OTP_RESPONSE_CODES.OTP_ALREADY_VERIFIED, data: otpEntry };
   }
 
-  async verifyOtp({ phoneNumber, code }: VerifyOtp) {
+  async verifyOtp({ phoneNumber, code, generateToken }: VerifyOtp) {
     const otpEntry = await this.otpDbClient.getOtpEntry(phoneNumber);
     if (!otpEntry) {
       return { status: OTP_RESPONSE_CODES.OTP_NOT_FOUND };
@@ -168,18 +171,28 @@ export class SmsClient {
       return { status: OTP_RESPONSE_CODES.OTP_ALREADY_VERIFIED };
     }
 
+    const resultObj: Record<string, any> = {}
     const isValid = otpEntry.code === code;
 
     if (!isValid) {
       return { status: OTP_RESPONSE_CODES.INVALID_OTP_CODE };
     }
 
+    resultObj.isValid = isValid
+    resultObj.status = OTP_RESPONSE_CODES.OTP_VERIFIED
+
     await this.otpDbClient.updateOtpEntry({ phoneNumber, verified: true });
 
     // Getting the verified user info from the database
     const user = await users.findOne({ phoneNumber })
+    resultObj.user = user.toJSON()
+    
+    if (generateToken) {
+      const token = await this.jwtService.createUserToken({ phoneNumber })
+      resultObj.token = token
+    }
 
-    return { status: OTP_RESPONSE_CODES.OTP_VERIFIED, isValid, user: user.toJSON() };
+    return resultObj
   }
 
   async sendOtp({ to, code }: { to: string; code: string }) {

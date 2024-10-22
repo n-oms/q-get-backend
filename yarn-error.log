@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\hp\.yarn\releases\yarn-1.22.19.cjs start
+  C:\Program Files\nodejs\node.exe C:\Users\hp\.yarn\releases\yarn-1.22.19.cjs add @types/jwt --save-dev
 
 PATH: 
   C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;node_modules\npm\bin;C:\Users\hp\AppData\Local\Android\Sdk;C:\Program Files\Git\cmd;C:\Program Files\Java\jdk-18\bin;C:\Program Files\heroku\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\mongosh-1.6.0-win32-x64\mongosh-1.6.0-win32-x64\bin;C:\Program Files\MySQL\MySQL Shell 8.0\bin;C:\Program Files\MongoDB\Server\6.0\bin;C:\Program Files\Python310\Scripts;C:\Users\hp\AppData\Roaming\Python\Python310\Scripts;C:\Ruby31-x64\bin;C:\Program Files\Amazon\AWSCLIV2\;C:\Program Files\Amazon\AWSCLI\bin\;C:\Program Files (x86)\Vim\vim90;C:\Program Files\Neovim\bin;C:\Users\hp\Documents\sonarcube\sonar-scanner-4.8.0.2856-windows\bin;C:\Users\hp\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Go\bin;C:\Program Files\PuTTY\;C:\Users\hp\AppData\Local\Microsoft\WindowsApps;C:\Users\hp\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\hp\AppData\Roaming\npm;C:\Program Files\heroku\bin;C:\Users\hp\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\hp\go\bin;C:\Users\hp\Downloads\ngrok-v3-stable-windows-amd64;C:\Users\hp\AppData\Local\Android\Sdk\platform-tools;C:\Gradle\gradle-8.10.2\bin;C:\Users\hp\AppData\Local\Android\Sdk\build-tools;C:\Users\hp\AppData\Local\Android\Sdk\platforms;C:\Users\hp\AppData\Local\Android\Sdk;
@@ -14,12 +14,17 @@ Platform:
   win32 x64
 
 Trace: 
-  SyntaxError: C:\Users\hp\applications\q-get-backend\package.json: Expected double-quoted property name in JSON at position 389
-      at JSON.parse (<anonymous>)
-      at C:\Users\hp\.yarn\releases\yarn-1.22.19.cjs:1104:57
-      at Generator.next (<anonymous>)
-      at step (C:\Users\hp\.yarn\releases\yarn-1.22.19.cjs:310:30)
-      at C:\Users\hp\.yarn\releases\yarn-1.22.19.cjs:321:13
+  Error: https://registry.yarnpkg.com/@types%2fjwt: Not found
+      at params.callback [as _callback] (C:\Users\hp\.yarn\releases\yarn-1.22.19.cjs:77675:18)
+      at self.callback (C:\Users\hp\.yarn\releases\yarn-1.22.19.cjs:135297:22)
+      at Request.emit (node:events:514:28)
+      at Request.<anonymous> (C:\Users\hp\.yarn\releases\yarn-1.22.19.cjs:136269:10)
+      at Request.emit (node:events:514:28)
+      at IncomingMessage.<anonymous> (C:\Users\hp\.yarn\releases\yarn-1.22.19.cjs:136191:12)
+      at Object.onceWrapper (node:events:628:28)
+      at IncomingMessage.emit (node:events:526:35)
+      at endReadableNT (node:internal/streams/readable:1376:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
 
 npm manifest: 
   {
@@ -31,7 +36,7 @@ npm manifest:
       "test": "echo \"Error: no test specified\" && exit 1",
       "build": "npx tsc && tsc-alias -p tsconfig.json",
       "dev": "ts-node -r tsconfig-paths/register -r dotenv/config src/index.ts",
-      "start": "tsc && tsc-alias -p tsconfig.json && node -r dotenv/config bin/app.js",
+      "start": "tsc && tsc-alias -p tsconfig.json && node -r dotenv/config bin/index.js"
     },
     "keywords": [],
     "author": "",
@@ -41,12 +46,14 @@ npm manifest:
       "dotenv": "^16.4.5",
       "express": "^4.21.1",
       "express-validator": "^7.2.0",
+      "jwt": "^0.2.0",
       "mongoose": "^8.7.1"
     },
     "devDependencies": {
       "@types/cors": "^2.8.17",
       "@types/express": "^5.0.0",
       "ts-node": "^10.9.2",
+      "tsc-alias": "^1.8.10",
       "tsconfig-paths": "^4.2.0",
       "typescript": "^5.6.3"
     }
@@ -693,6 +700,13 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
     integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
   
+  jwt@^0.2.0:
+    version "0.2.0"
+    resolved "https://registry.yarnpkg.com/jwt/-/jwt-0.2.0.tgz#4c9ad46bc84bfeaf91556ecce7c57aa578cbc8b8"
+    integrity sha512-+lsJgK3p+dr7yCHO19Ap2uFh+pMSCayPRGjWmf3kYCnYfO+1kqz4DqA8s65HKYIrw5c2NBo+dEvzoZUco09j4Q==
+    dependencies:
+      node-base64 "0.0.1"
+  
   kareem@2.6.3:
     version "2.6.3"
     resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.6.3.tgz#23168ec8ffb6c1abfd31b7169a6fb1dd285992ac"
@@ -824,6 +838,11 @@ Lockfile:
     version "0.6.3"
     resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.3.tgz#58e323a72fedc0d6f9cd4d31fe49f51479590ccd"
     integrity sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==
+  
+  node-base64@0.0.1:
+    version "0.0.1"
+    resolved "https://registry.yarnpkg.com/node-base64/-/node-base64-0.0.1.tgz#ee3e095f97e9f4d72fb3dea98bcb2d25c8716b03"
+    integrity sha512-lzWZQXvK7O1g5aKPCTYQJFGJc3MToEMlGmhXN+2UtkRYQz0OiWHoSMkfqQedUYCwWnixvsauH/IFsaFkrspjYQ==
   
   normalize-path@^3.0.0, normalize-path@~3.0.0:
     version "3.0.0"
