@@ -13,12 +13,12 @@ export class GetDashboardDataHandler implements IHandler {
     resource: string;
     validations: any[];
     dashboardService: DashboardService
-    isAuthorized?: boolean;
+    isAuthorizedAccess?: boolean;
     constructor() {
         this.operation = Operations.READ;
         this.isIdempotent = false;
-        this.isAuthorized = true;
-        this.operationId = "otp";
+        this.isAuthorizedAccess = true;
+        this.operationId = "GET_OTP";
         this.resource = HTTP_RESOURCES.DASHBOARD;
         this.validations = [];
         this.dashboardService = new DashboardService();
@@ -28,7 +28,7 @@ export class GetDashboardDataHandler implements IHandler {
     async handler(req: ApiRequest<GetDashboardData>, res: ApiResponse, next) {
         try {
             const { userType, vendorId } = req.userInfo
-
+            
             if (userType !== UserType.Vendor || !vendorId) {
                 throw new BadRequestExecption('User is not vendor')
             }
@@ -38,7 +38,6 @@ export class GetDashboardDataHandler implements IHandler {
             if (!type) {
                 throw new NotProvidedError('Query type not provided')
             }
-
 
             switch (type) {
                 case DashboardQueryTypes.GET_CARD_DATA: {

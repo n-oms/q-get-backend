@@ -1,4 +1,6 @@
+
 export const HTTP_RESOURCES = {
     OTP: 'otp',
-    DASHBOARD: 'dashboard'
+    DASHBOARD: 'dashboard',
+    APPLICATIONS : 'applications'
 }

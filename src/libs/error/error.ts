@@ -38,3 +38,13 @@ export class NotProvidedError extends Error {
     }
 }
 
+export class DbError extends Error {
+    statusCode: number;
+
+    constructor(message: string) {
+        super(message);
+        this.name = 'DbError';
+        this.statusCode = 500; 
+    }
+}
+

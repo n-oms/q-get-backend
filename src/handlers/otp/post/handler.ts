@@ -12,6 +12,7 @@ export class OtpApiHandler implements IHandler {
     resource: string;
     validations: any[];
     smsClient: SmsClient
+    isAuthorizedAccess?: boolean;
     constructor() {
         this.operation = Operations.CREATE;
         this.isIdempotent = false;
@@ -19,14 +20,14 @@ export class OtpApiHandler implements IHandler {
         this.resource = HTTP_RESOURCES.OTP;
         this.validations = [];
         this.smsClient = new SmsClient();
+        this.isAuthorizedAccess = false;
         this.handler = this.handler.bind(this);
     }
 
     async handler(req: ApiRequest<OtpApiHandlerRequest>, res: ApiResponse, next) {
-
+        
         const action = req.body.action;
         const phoneNumber = req.body.phoneNumber;
-
         try {
 
             if (!action) {

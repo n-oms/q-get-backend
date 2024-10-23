@@ -9,7 +9,7 @@ export interface IHandler {
     resource: string;
     handler: (validHeader, validBody, next) => void;
     validations: Array<any>;
-    isAuthorized?: boolean;
+    isAuthorizedAccess?: boolean;
 }
 
 export interface ApiRequestTypes {

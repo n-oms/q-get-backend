@@ -8,6 +8,7 @@ import { validate } from "@/libs/validations/api";
 import { authorizeRequest } from "@/middlewares/authorizer/authorizer";
 import { Express } from "express";
 import {MobileVersionHandler} from '@/handlers/mobile-version';
+import { GetApplicationsDataHandler } from "@/handlers/applications/get/handler";
 
 
 const MAP_KEY_PAIR = [
@@ -25,7 +26,7 @@ export const registerRoutes = function (app: Express) {
         const relativePath = `/${API_VERSION}/${element.resource}`;
         app[httpMethod](
             relativePath,
-            element.isAuthorized ? authorizeRequest : (req, res, next) => next(),
+            element.isAuthorizedAccess ? authorizeRequest : (req, res, next) => next(),
             validate(element.validations), element.handler);
     });
     app.use(errorHandler);
@@ -37,5 +38,6 @@ function getAllRouteHandlers(): Array<IHandler> {
     routeHandlers.push(new OtpApiHandler());
     routeHandlers.push(new GetDashboardDataHandler());
     routeHandlers.push(new MobileVersionHandler());
+    routeHandlers.push(new GetApplicationsDataHandler());
     return routeHandlers;
 }
