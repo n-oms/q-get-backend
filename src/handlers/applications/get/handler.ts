@@ -1,6 +1,5 @@
 import { HTTP_RESOURCES } from "@/libs/constants/resources";
 import { Operations } from "@/libs/enums/common";
-import { BadRequestExecption } from "@/libs/error/error";
 import { ApplicationsService } from "@/libs/services/applications/service";
 import { ApiRequest, ApiResponse, IHandler } from "@/libs/types/common";
 import { GetApplicationsHandlerInput } from "../types";

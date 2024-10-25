@@ -4,15 +4,18 @@ import { User } from "@/libs/services/mongo/types";
 import { NextFunction, Request, Response } from "express";
 
 export async function authorizeRequest(req: { userInfo: User } & Request, res: Response, next: NextFunction) {
+    
     const bearerToken = req.headers.authorization
+
     if (!bearerToken) {
         return res.status(401).send('Unauthorized');
     }
+    
     const [bearer, token] = bearerToken.split(' ')
-
-    if (bearer !== 'Bearer') {
+    if (!bearer || !token) {
         return res.status(401).send('Unauthorized');
     }
+
 
     const jwtService = new JwtService()
     const payload = await jwtService.decodeUserToken<{ phoneNumber: string }>(token)
