@@ -9,6 +9,7 @@ export class MobileVersionHandler implements IHandler {
     operationId: string;
     resource: string;
     validations: any[];
+    isAuthorizedAccess: boolean;
 
     constructor() {
         this.operation = Operations.READ; 
@@ -16,6 +17,7 @@ export class MobileVersionHandler implements IHandler {
         this.operationId = "mobileVersion"; 
         this.resource = HTTP_RESOURCES.MOBILE_VERSION; 
         this.validations = []; 
+        this.isAuthorizedAccess =true;
     }
 
     public async handler(req: Request, res: Response): Promise<Response> {
