@@ -28,12 +28,14 @@ export class GetDashboardDataHandler implements IHandler {
     async handler(req: ApiRequest<GetDashboardData>, res: ApiResponse, next) {
         try {
             const { userType, vendorId } = req.userInfo
-            
+
             if (userType !== UserType.Vendor || !vendorId) {
                 throw new BadRequestExecption('User is not vendor')
             }
 
             const type = req.query.queryType;
+
+            delete req.query.queryType
 
             if (!type) {
                 throw new NotProvidedError('Query type not provided')
@@ -42,6 +44,19 @@ export class GetDashboardDataHandler implements IHandler {
             switch (type) {
                 case DashboardQueryTypes.GET_CARD_DATA: {
                     const result = await this.dashboardService.getCardData({ vendorId })
+                    return res.status(200).send(result);
+                }
+                case DashboardQueryTypes.GET_TABLE_DATA: {
+                    const { queryId } = req.query
+
+                    if (!queryId) {
+                        throw new NotProvidedError('Query id not provided')
+                    }
+
+                    // delete queryId from query to avoid passing it to the db query
+                    delete req.query.queryId
+                    
+                    const result = await this.dashboardService.getTableData({ query: { vendorId, ...req.query }, queryId })
                     return res.status(200).send(result);
                 }
                 default:

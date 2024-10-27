@@ -33,4 +33,3 @@ export class GetApplicationsDataHandler implements IHandler {
         }
     }
 }
-

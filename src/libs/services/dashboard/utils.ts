@@ -1,0 +1,1 @@
+export const tableQueryIds = ['scans', 'applications'];

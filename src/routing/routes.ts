@@ -9,6 +9,7 @@ import { authorizeRequest } from "@/middlewares/authorizer/authorizer";
 import { Express } from "express";
 import {MobileVersionHandler} from '@/handlers/mobile-version';
 import { GetApplicationsDataHandler } from "@/handlers/applications/get/handler";
+import { GetScanHandler } from "@/handlers/scans/get/handler";
 
 
 const MAP_KEY_PAIR = [
@@ -39,5 +40,6 @@ function getAllRouteHandlers(): Array<IHandler> {
     routeHandlers.push(new GetDashboardDataHandler());
     routeHandlers.push(new MobileVersionHandler());
     routeHandlers.push(new GetApplicationsDataHandler());
+    routeHandlers.push(new GetScanHandler());
     return routeHandlers;
 }

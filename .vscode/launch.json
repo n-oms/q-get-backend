@@ -1,0 +1,46 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run server",
+      "program": "${workspaceFolder}/src/index.ts",
+      "preLaunchTask": "npm: build",
+      "sourceMaps": true,
+      "outputCapture": "std",
+      "smartStep": true,
+      "internalConsoleOptions": "openOnSessionStart",
+      "outDir": "${workspaceRoot}/bin",
+      "runtimeExecutable": "ts-node",
+      "stopOnEntry": false,
+      "runtimeArgs": ["--require=dotenv/config", "--require=tsconfig-paths/register"],
+      "env": {
+        "MONGO_DB_URL": "mongodb+srv://nikesh:q-get@cluster0.puzgpio.mongodb.net/q-get?retryWrites=true&w=majority",
+        "SMS_API_URL": "https://smsgw.tatatel.co.in:9095/campaignService/campaigns/qs",
+        "SMS_API_KEY": "3564chlosORGLPIBf6mZTV",
+        "SMS_WELCOME_TEMPLATE_ID": "1707172379202724539",
+        "SMS_OTP_TEMPLATE_ID": "1707172379194558081",
+        "NEXT_PUBLIC_NEXT_API_URL": "https://q-get-webapp-dev.n-oms.in",
+        "SMS_SENDER_ID": "QGET",
+        "SMS_TATA_TEL_USERNAME": "QGETFIN",
+        "SMS_TATA_TEL_PASSWORD": "Qgetf^01",
+        "SMS_TATA_TEL_PE_ID": "1601169170609446052",
+        "APP_NAME": "QGET",
+        "REDIS_ENABLED": "false",
+        "SQS_QUEUE_URL": "https://sqs.us-east-1.amazonaws.com/625492852104/Q-GET-vendor-migration",
+        "RATE_LIMIT": "false",
+        "AWS_REGION": "us-east-1",
+        "PUBLIC_API_KEY": "q-get-insights-7x9R2fK3mP5vL8tZ",
+        "ORG_ID": "506bh5p8ku6618umo9j1jon7ip",
+        "SMS_VENDOR_TEMPLATE_ID": "1707172563450819693",
+        "RAISE_INVOICE_QUEUE_URL": "https://sqs.us-east-1.amazonaws.com/625492852104/TaskNotifications-multi_tenant_noms",
+        "JWT_SECRET": "225a324e09b9cd188d2fd306d03a0649",
+        "JWT_EXPIRY": "1d"
+      }
+    }
+  ]
+}
