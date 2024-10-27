@@ -10,7 +10,7 @@ import { Express } from "express";
 import {MobileVersionHandler} from '@/handlers/handling/mobile-version';
 import { GetApplicationsDataHandler } from "@/handlers/applications/get/handler";
 import { GetScanHandler } from "@/handlers/scans/get/handler";
-import { GetUserHandler } from "@/handlers/handling/getme";
+import { GetUserHandler } from "@/handlers/users/getme/handler";
 
 
 const MAP_KEY_PAIR = [

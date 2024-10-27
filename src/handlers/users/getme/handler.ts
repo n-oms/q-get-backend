@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { IHandler } from "@/libs/types/common";
+import { NextFunction, Request, Response } from "express";
+import { ApiRequest, IHandler } from "@/libs/types/common";
 import { Operations } from "@/libs/enums/common";
 import { users } from "@/libs/services/mongo/models/user";
 
@@ -12,16 +12,16 @@ export class GetUserHandler implements IHandler {
     isAuthorizedAccess: boolean;
 
     constructor() {
-        this.operation = Operations.READ; 
+        this.operation = Operations.READ;
         this.isIdempotent = true;
-        this.operationId = "getUser"; 
-        this.resource = "user"; 
-        this.validations = []; 
-        this.isAuthorizedAccess = false; 
+        this.operationId = "getUser";
+        this.resource = "getMe";
+        this.validations = [];
+        this.isAuthorizedAccess = true;
     }
 
-    public async handler(req: Request, res: Response): Promise<Response> {
-        const { phoneNumber } = req.body;
+    public async handler(req: ApiRequest, res: Response, next: NextFunction): Promise<Response> {
+        const { phoneNumber } = req.userInfo;
 
         if (!phoneNumber) {
             return res.status(400).json({ message: "Phone number is required" });
@@ -34,11 +34,10 @@ export class GetUserHandler implements IHandler {
                 return res.status(404).json({ message: "User not found" });
             }
 
-            
+
             return res.status(200).json(user);
         } catch (error) {
-            console.error("Error fetching user:", error);
-            return res.status(500).json({ message: "Internal server error" });
+            next(error)
         }
     }
 }

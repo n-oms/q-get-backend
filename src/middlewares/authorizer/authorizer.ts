@@ -10,21 +10,21 @@ export async function authorizeRequest(req: { userInfo: User } & Request, res: R
     if (!bearerToken) {
         return res.status(401).send('Unauthorized');
     }
-    
+
     const [bearer, token] = bearerToken.split(' ')
+
     if (!bearer || !token) {
         return res.status(401).send('Unauthorized');
     }
-
 
     const jwtService = new JwtService()
     const payload = await jwtService.decodeUserToken<{ phoneNumber: string }>(token)
 
     // Getting user info from the db
-    const userInfo = await users.findOne({ phoneNumber: payload.phoneNumber })
+    const userInfo = await users.findOne({ phoneNumber: payload?.phoneNumber })
 
     if (!userInfo) {
-        return res.status(401).send(`User not found for phone number : ${payload.phoneNumber}`)
+        return res.status(401).send(`User not found for phone number : ${payload?.phoneNumber}`)
     }
 
     // Adding user info to the request object
