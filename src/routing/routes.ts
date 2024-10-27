@@ -7,9 +7,9 @@ import { IHandler } from "@/libs/types/common";
 import { validate } from "@/libs/validations/api";
 import { authorizeRequest } from "@/middlewares/authorizer/authorizer";
 import { Express } from "express";
-import {MobileVersionHandler} from '@/handlers/handling.ts/mobile-version';
+import {MobileVersionHandler} from '@/handlers/handling/mobile-version';
 import { GetApplicationsDataHandler } from "@/handlers/applications/get/handler";
-import { GetUserHandler } from "@/handlers/handling.ts/getMe";
+import { GetUserHandler } from "@/handlers/handling/getme";
 
 
 const MAP_KEY_PAIR = [
