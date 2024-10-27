@@ -7,9 +7,10 @@ import { IHandler } from "@/libs/types/common";
 import { validate } from "@/libs/validations/api";
 import { authorizeRequest } from "@/middlewares/authorizer/authorizer";
 import { Express } from "express";
-import {MobileVersionHandler} from '@/handlers/mobile-version';
+import {MobileVersionHandler} from '@/handlers/handling/mobile-version';
 import { GetApplicationsDataHandler } from "@/handlers/applications/get/handler";
 import { GetScanHandler } from "@/handlers/scans/get/handler";
+import { GetUserHandler } from "@/handlers/handling/getme";
 
 
 const MAP_KEY_PAIR = [
@@ -41,5 +42,6 @@ function getAllRouteHandlers(): Array<IHandler> {
     routeHandlers.push(new MobileVersionHandler());
     routeHandlers.push(new GetApplicationsDataHandler());
     routeHandlers.push(new GetScanHandler());
+    routeHandlers.push(new GetUserHandler());
     return routeHandlers;
 }
