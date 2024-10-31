@@ -1,8 +1,8 @@
-import { app } from "@/app";
-import { ApplicationStatus } from "../mongo/enums";
+import { ApplicationStatus, VendorCreditStatus } from "../mongo/enums";
 import { applications } from "../mongo/models/applications";
 import { scans } from "../mongo/models/scans";
-import { tableQueryIds } from "./utils";
+import { vendorCredits } from "../mongo/models/vendor-credits";
+import { VendorCreditsType } from "../mongo/types";
 import { QueryBuilderService } from "../queryBuilder/service";
 
 export class DashboardService {
@@ -10,6 +10,8 @@ export class DashboardService {
 
     constructor() {
         this.queryBuilder = new QueryBuilderService();
+        this.getCardData = this.getCardData.bind(this);
+        this.getTableData = this.getTableData.bind(this);
     }
 
     async getCardData({ vendorId }: { vendorId: string }) {
@@ -18,7 +20,7 @@ export class DashboardService {
             const aggregationQuery = this.queryBuilder.buildAgrregationQuery({
                 match: {
                     vendorId: vendorId,
-                    status: { $in: [ApplicationStatus.LOGIN, ApplicationStatus.APPROVED, ApplicationStatus.BILLED] } // Include other statuses you want to count
+                    status: { $in: [ApplicationStatus.LOGIN, ApplicationStatus.APPROVED] } // Include other statuses you want to count
                 },
                 group: {
                     _id: "$status",
@@ -26,6 +28,10 @@ export class DashboardService {
                 }
             })
             const applicationQueryResponse = await applications.aggregate(aggregationQuery)
+
+            // Total credits billed for the vendor
+            const toBeRaisedCredits = await vendorCredits.find({ vendorId, status: VendorCreditStatus.TO_BE_RAISED });
+            const creditsBilled = this.getCreditsBilled(toBeRaisedCredits);
             return {
                 scans: {
                     count: scansCount
@@ -36,21 +42,35 @@ export class DashboardService {
                 approved: {
                     count: applicationQueryResponse.find((item) => item._id === ApplicationStatus.APPROVED)?.count || 0
                 },
+                billed: {
+                    value: creditsBilled
+                }
             }
         } catch (error) {
             throw error;
         }
     }
 
+    private getCreditsBilled(credits: VendorCreditsType[]) {
+        if (vendorCredits.length === 0) {
+            return 0
+        }
+        return credits.reduce((acc, credit) => acc + credit.credit, 0)
+    }
+
     async getTableData({ queryId, query }: { queryId: string, query: Record<string, any> }) {
         try {
-            if (!tableQueryIds.includes(queryId)) {
-                throw new Error('Invalid query id')
+            
+            switch(queryId) {
+                case 'scans': 
+                    return await scans.find(query);
+                case 'applications':
+                    return await applications.find(query);
+                case 'billed':
+                    return await vendorCredits.find({ ...query, status: VendorCreditStatus.TO_BE_RAISED });
+                default:
+                    throw new Error('Invalid query id')
             }
-            if (queryId === 'scans') {
-                return await scans.find(query);
-            }
-            return await applications.find(query);
         } catch (error) {
             throw error;
         }

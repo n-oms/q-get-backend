@@ -1,4 +1,4 @@
-import { ApplicationStatus, UserStatus, UserType, VendorRegistrationStatus } from "./enums";
+import { ApplicationStatus, UserStatus, UserType, VendorCreditStatus, VendorRegistrationStatus } from "./enums";
 
 export type Otp = {
     phoneNumber: string;
@@ -57,3 +57,18 @@ export type Application = {
     createdByName: string;
     bankName: string;
 };
+
+export type VendorCreditsType = {
+    vendorId: string;
+    credit: number;
+    name: string;
+    applicationId: string;
+    status: VendorCreditStatus;
+    bankInfo: {
+      bankName: string;
+      bankId: string;
+    };
+    invoiceReqId?: string;
+    message?: string;
+    amountPaid?: number;
+  };

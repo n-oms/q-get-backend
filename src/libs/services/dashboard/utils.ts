@@ -1,1 +1,1 @@
-export const tableQueryIds = ['scans', 'applications'];
+export const tableQueryIds = ['scans', 'applications', 'billed'];
