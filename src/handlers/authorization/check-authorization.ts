@@ -26,13 +26,9 @@ export class CheckAuthorizationHandler implements IHandler {
 
     async handler(req: ApiRequest<GetApplicationsHandlerInput>, res: ApiResponse, next) {
         try {
-            const query = req.query || {};
-            const result = await this.applicationsService.queryApplications({ query });
-            return res.status(200).send(result);
-        } 
-        catch (error) {
+            return res.status(200).send({message: "Authorized"});
+        } catch (error) {
             next(error);
-            return res.status(200).send({ message: "Valid token" });
         }
     }
 }

@@ -9,7 +9,7 @@ export class GetApplicationsDataHandler implements IHandler {
     isIdempotent: boolean;
     operationId: string;
     resource: string;
-    validations: any[];
+    validations: any[];z
     applicationsService: ApplicationsService
     isAuthorizedAccess?: boolean;
     constructor() {
