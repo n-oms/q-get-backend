@@ -11,6 +11,7 @@ import {MobileVersionHandler} from '@/handlers/handling/mobile-version';
 import { GetApplicationsDataHandler } from "@/handlers/applications/get/handler";
 import { GetScanHandler } from "@/handlers/scans/get/handler";
 import { GetUserHandler } from "@/handlers/users/getme/handler";
+import { CheckAuthorizationHandler } from "@/handlers/authorization/check-authorization";
 
 
 const MAP_KEY_PAIR = [
@@ -41,6 +42,7 @@ function getAllRouteHandlers(): Array<IHandler> {
     routeHandlers.push(new GetDashboardDataHandler());
     routeHandlers.push(new MobileVersionHandler());
     routeHandlers.push(new GetApplicationsDataHandler());
+    routeHandlers.push(new CheckAuthorizationHandler()); 
     routeHandlers.push(new GetScanHandler());
     routeHandlers.push(new GetUserHandler());
     return routeHandlers;
