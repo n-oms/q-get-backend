@@ -1,6 +1,6 @@
-import { env } from '@/env/env'
-import { EnvNotFoundError, Unauthorized } from '@/libs/error/error';
-import jwt from 'jsonwebtoken'
+import { env } from '@/env/env';
+import { EnvNotFoundError, UnauthorizedException } from '@/libs/error/error';
+import jwt from 'jsonwebtoken';
 
 
 
@@ -30,7 +30,7 @@ export class JwtService {
             const payload = typeof decoded === 'string' ? JSON.parse(decoded) : decoded
             return payload as T
         } catch (error) {
-           throw new Unauthorized("jwt verification failed"); 
+           throw new UnauthorizedException("jwt verification failed"); 
         }
 
     }

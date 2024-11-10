@@ -30,3 +30,7 @@ export const HTTP_METHODS = {
     MOBILE_VERSION: 'mobile-version',
   };
   
+
+  export const SQS_EVENT_IDS = {
+    RAISE_INVOICE_REQUEST: 'raise-invoice-request',
+  }

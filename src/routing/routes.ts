@@ -12,6 +12,7 @@ import { GetApplicationsDataHandler } from "@/handlers/applications/get/handler"
 import { GetScanHandler } from "@/handlers/scans/get/handler";
 import { GetUserHandler } from "@/handlers/users/getme/handler";
 import { CheckAuthorizationHandler } from "@/handlers/authorization/check-authorization";
+import { InvoiceApiPostHandler } from "@/handlers/invoice/post/handler";
 
 
 const MAP_KEY_PAIR = [
@@ -45,5 +46,6 @@ function getAllRouteHandlers(): Array<IHandler> {
     routeHandlers.push(new CheckAuthorizationHandler()); 
     routeHandlers.push(new GetScanHandler());
     routeHandlers.push(new GetUserHandler());
+    routeHandlers.push(new InvoiceApiPostHandler());
     return routeHandlers;
 }

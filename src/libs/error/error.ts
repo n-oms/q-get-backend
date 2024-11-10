@@ -47,7 +47,7 @@ export class DbError extends Error {
         this.statusCode = 500; 
     }
 }
-export class Unauthorized extends Error {
+export class UnauthorizedException extends Error {
     statusCode: number;
 
     constructor(message: string) {

@@ -15,7 +15,6 @@ export class OtpDBService {
       const otp = await otps.findOne({ phoneNumber: phone });
       return otp?.toJSON();
     } catch (error) {
-      console.error(error);
       throw error;
     }
   }
@@ -36,7 +35,6 @@ export class OtpDBService {
       });
       return otp.toJSON();
     } catch (error) {
-      console.error(error);
       throw error;
     }
   }
@@ -52,7 +50,6 @@ export class OtpDBService {
       );
       return otp?.toJSON();
     } catch (error) {
-      console.error(error);
       throw error;
     }
   }
