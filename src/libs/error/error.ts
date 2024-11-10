@@ -47,4 +47,12 @@ export class DbError extends Error {
         this.statusCode = 500; 
     }
 }
+export class Unauthorized extends Error {
+    statusCode: number;
 
+    constructor(message: string) {
+        super(message);
+        this.name = 'Unauthorized';
+        this.statusCode = 401; 
+    }
+}

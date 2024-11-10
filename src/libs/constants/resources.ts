@@ -4,4 +4,7 @@ export const HTTP_RESOURCES = {
     DASHBOARD: 'dashboard',
     APPLICATIONS : 'applications',
     SCANS: 'scans',
-}
+    AUTHORIZATION: {
+        CHECK_AUTHORIZATION: "checkAuthorization",
+    },
+};
