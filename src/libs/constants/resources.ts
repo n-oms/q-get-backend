@@ -5,6 +5,6 @@ export const HTTP_RESOURCES = {
     APPLICATIONS : 'applications',
     SCANS: 'scans',
     AUTHORIZATION: {
-        CHECK_AUTHORIZATION: "checkAthorization",
+        CHECK_AUTHORIZATION: "checkAuthorization",
     },
 };
