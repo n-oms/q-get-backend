@@ -5,6 +5,7 @@ import { NextFunction, Request, Response } from "express";
 
 export async function authorizeRequest(req: { userInfo: User } & Request, res: Response, next: NextFunction) {
     
+   try {
     const bearerToken = req.headers.authorization
 
     if (!bearerToken) {
@@ -31,4 +32,8 @@ export async function authorizeRequest(req: { userInfo: User } & Request, res: R
     req.userInfo = userInfo
 
     next();
+    
+   } catch (error) {
+    res.status(401).send({message:"Unauthorized",error})
+   }
 }
