@@ -1,12 +1,10 @@
-import {
-    ApplicationStatus,
-    VendorCreditStatus
-} from "../mongo/enums";
+import { ApplicationStatus, VendorCreditStatus } from "../mongo/enums";
 import { applications } from "../mongo/models/applications";
 import { Invoices } from "../mongo/models/invoice";
 import { scans } from "../mongo/models/scans";
 import { vendorCredits } from "../mongo/models/vendor-credits";
 import { VendorCreditsType } from "../mongo/types";
+import autoBind from "auto-bind";
 import { QueryBuilderService } from "../queryBuilder/service";
 
 export class DashboardService {
@@ -14,8 +12,7 @@ export class DashboardService {
 
   constructor() {
     this.queryBuilder = new QueryBuilderService();
-    this.getCardData = this.getCardData.bind(this);
-    this.getTableData = this.getTableData.bind(this);
+    autoBind(this);
   }
 
   async getCardData({ vendorId }: { vendorId: string }) {
