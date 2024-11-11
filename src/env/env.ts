@@ -11,4 +11,7 @@ export const env = {
     MONGO_DB_URL: process.env.MONGO_DB_URL,
     JWT_SECRET: process.env.JWT_SECRET,
     JWT_EXPIRY: process.env.JWT_EXPIRY,
+    RAISE_INVOICE_SQS_QUEUE_NAME: process.env.RAISE_INVOICE_SQS_QUEUE_NAME,
+    AWS_REGION: process.env.AWS_REGION,
+    AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
 }

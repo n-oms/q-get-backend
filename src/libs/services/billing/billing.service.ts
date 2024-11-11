@@ -9,6 +9,7 @@ import {
   CreateInvoiceInput,
   RaiseInvoiceEventType,
 } from "./types";
+import { SQS_QUEUES } from "@/libs/constants/sqs";
 
 export class BillingService {
   private readonly vendorCreditService: VendorCreditService;
@@ -56,7 +57,7 @@ export class BillingService {
 
     // Pushing raise invoice request message to SQS
     const queueResponse = await this.sqsService.sendMessage({
-      queueUrl: process.env.RAISE_INVOICE_SQS_QUEUE_URL,
+      queueUrl: SQS_QUEUES.RAISE_INVOICE_REQUEST_QUEUE.url,
       messageBody: message,
     });
 
@@ -66,7 +67,12 @@ export class BillingService {
         amountRaised: totalAmount,
         invoiceReqId: invoiceId,
       });
+      return {
+        message: "Invoice request sent successfully",
+        invoice,
+      };
     }
+    return { message: "Failed to send invoice request" };
   }
 
   private createInvoiceId({ vendorId }: { vendorId: string }) {

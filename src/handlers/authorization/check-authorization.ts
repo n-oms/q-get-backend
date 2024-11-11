@@ -3,6 +3,8 @@ import { Operations } from "@/libs/enums/common";
 import { ApplicationsService } from "@/libs/services/applications/service";
 import { ApiRequest, ApiResponse, IHandler } from "@/libs/types/common";
 import { GetApplicationsHandlerInput } from "@/handlers/applications/types";
+import { NextFunction } from "express";
+import autoBind from "auto-bind";
 
 export class CheckAuthorizationHandler implements IHandler {
     operation: Operations;
@@ -21,10 +23,10 @@ export class CheckAuthorizationHandler implements IHandler {
         this.resource = HTTP_RESOURCES.AUTHORIZATION.CHECK_AUTHORIZATION;
         this.validations = [];
         this.applicationsService = new ApplicationsService();
-        this.handler = this.handler.bind(this);
+        autoBind(this)
     }
 
-    async handler(req: ApiRequest<GetApplicationsHandlerInput>, res: ApiResponse, next) {
+    async handler(_: ApiRequest<GetApplicationsHandlerInput>, res: ApiResponse, next: NextFunction) {
         try {
             return res.status(200).send({message: "Authorized"});
         } catch (error) {
