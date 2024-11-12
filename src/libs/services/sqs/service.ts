@@ -1,5 +1,4 @@
 import { SQS } from "@aws-sdk/client-sqs";
-import autoBind from "auto-bind";
 import { SendMessageInput } from "./types";
 import { AWS_CONFIG } from "@/libs/constants/common";
 
@@ -7,7 +6,7 @@ export class SqsService {
   private readonly sqs: SQS;
   constructor() {
     this.sqs = new SQS({ region: AWS_CONFIG.region });
-    autoBind(this);
+    this.sendMessage = this.sendMessage.bind(this);
   }
 
   async sendMessage(input: SendMessageInput) {

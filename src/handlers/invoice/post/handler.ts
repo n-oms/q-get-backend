@@ -4,7 +4,6 @@ import { ApiRequest, ApiResponse, IHandler } from "@/libs/types/common";
 import { NextFunction } from "express";
 import { InvoiceApiActionType, InvoiceApiRequestType } from "./types";
 import { BadRequestExecption } from "@/libs/error/error";
-import autoBind from "auto-bind";
 import { BillingService } from "@/libs/services/billing/billing.service";
 
 export class InvoiceApiPostHandler implements IHandler {
@@ -23,7 +22,7 @@ export class InvoiceApiPostHandler implements IHandler {
     this.validations = [];
     this.isAuthorizedAccess = true;
     this.billingService = new BillingService();
-    autoBind(this);
+    this.handler = this.handler.bind(this);
   }
 
   async handler(

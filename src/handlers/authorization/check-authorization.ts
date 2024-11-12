@@ -4,7 +4,6 @@ import { ApplicationsService } from "@/libs/services/applications/service";
 import { ApiRequest, ApiResponse, IHandler } from "@/libs/types/common";
 import { GetApplicationsHandlerInput } from "@/handlers/applications/types";
 import { NextFunction } from "express";
-import autoBind from "auto-bind";
 
 export class CheckAuthorizationHandler implements IHandler {
     operation: Operations;
@@ -23,7 +22,7 @@ export class CheckAuthorizationHandler implements IHandler {
         this.resource = HTTP_RESOURCES.AUTHORIZATION.CHECK_AUTHORIZATION;
         this.validations = [];
         this.applicationsService = new ApplicationsService();
-        autoBind(this)
+        this.handler = this.handler.bind(this)
     }
 
     async handler(_: ApiRequest<GetApplicationsHandlerInput>, res: ApiResponse, next: NextFunction) {

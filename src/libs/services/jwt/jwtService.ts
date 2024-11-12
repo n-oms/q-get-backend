@@ -2,8 +2,6 @@ import { env } from '@/env/env';
 import { EnvNotFoundError, UnauthorizedException } from '@/libs/error/error';
 import jwt from 'jsonwebtoken';
 
-
-
 export class JwtService {
 
     // Create a token with the phone number

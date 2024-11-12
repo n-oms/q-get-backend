@@ -1,5 +1,4 @@
 import { SQS_EVENT_IDS } from "@/libs/constants/common";
-import autoBind from "auto-bind";
 import { VendorCreditService } from "../credits/service";
 import { Invoices } from "../mongo/models/invoice";
 import { OrganizationService } from "../organization/service";
@@ -19,7 +18,10 @@ export class BillingService {
     this.vendorCreditService = new VendorCreditService();
     this.sqsService = new SqsService();
     this.organizationService = new OrganizationService();
-    autoBind(this);
+    this.pushRaiseInvoiceEvent = this.pushRaiseInvoiceEvent.bind(this);
+    this.createInvoiceId = this.createInvoiceId.bind(this);
+    this.calculateTotalCredits = this.calculateTotalCredits.bind(this);
+    this.createInvoice = this.createInvoice.bind(this);
   }
 
   async pushRaiseInvoiceEvent(input: RaiseInvoiceEventType) {

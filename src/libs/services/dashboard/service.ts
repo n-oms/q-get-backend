@@ -4,7 +4,6 @@ import { Invoices } from "../mongo/models/invoice";
 import { scans } from "../mongo/models/scans";
 import { vendorCredits } from "../mongo/models/vendor-credits";
 import { VendorCreditsType } from "../mongo/types";
-import autoBind from "auto-bind";
 import { QueryBuilderService } from "../queryBuilder/service";
 
 export class DashboardService {
@@ -12,7 +11,9 @@ export class DashboardService {
 
   constructor() {
     this.queryBuilder = new QueryBuilderService();
-    autoBind(this);
+    this.getCardData = this.getCardData.bind(this);
+    this.getTableData = this.getTableData.bind(this);
+    this.getCreditsBilled = this.getCreditsBilled.bind(this);
   }
 
   async getCardData({ vendorId }: { vendorId: string }) {
