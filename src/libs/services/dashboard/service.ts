@@ -3,6 +3,7 @@ import { applications } from "../mongo/models/applications";
 import { Invoices } from "../mongo/models/invoice";
 import { scans } from "../mongo/models/scans";
 import { vendorCredits } from "../mongo/models/vendor-credits";
+import { users } from "../mongo/schema";
 import { VendorCreditsType } from "../mongo/types";
 import { QueryBuilderService } from "../queryBuilder/service";
 import { UserService } from "../user/service";
@@ -103,6 +104,10 @@ export class DashboardService {
           return await vendorCredits.find({
             ...query,
             status: VendorCreditStatus.TO_BE_RAISED,
+          });
+        case "users":
+          return await users.find({
+            vendorId: query.vendorId,
           });
         default:
           throw new Error("Invalid query id");

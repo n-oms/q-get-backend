@@ -5,7 +5,7 @@ export class UserService {
     const result = await users.findOne({ phoneNumber });
     return result.toJSON();
   }
-  async getUserByVendorId({ vendorId }: { vendorId: string }) {
+  async getUsersByVendorId({ vendorId }: { vendorId: string }) {
     const result = await users.find({ vendorId });
     return result;
   }
