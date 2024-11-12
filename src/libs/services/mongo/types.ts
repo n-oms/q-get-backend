@@ -41,6 +41,7 @@ export type Scans = {
   updatedAt: string;
   bankId: string;
   phoneNumber: string;
+  name: string;
 };
 
 export type Application = {

@@ -5,6 +5,7 @@ import { scans } from "../mongo/models/scans";
 import { vendorCredits } from "../mongo/models/vendor-credits";
 import { VendorCreditsType } from "../mongo/types";
 import { QueryBuilderService } from "../queryBuilder/service";
+import { UserService } from "../user/service";
 
 export class DashboardService {
   private readonly queryBuilder: QueryBuilderService;
@@ -43,6 +44,10 @@ export class DashboardService {
       const creditsBilled = this.getCreditsBilled(toBeRaisedCredits);
       const totalInvoices = await Invoices.countDocuments({ vendorId });
 
+      const userCount = await new UserService().getUserCountByVendorId({
+        vendorId,
+      });
+
       return {
         scans: {
           count: scansCount,
@@ -64,6 +69,9 @@ export class DashboardService {
         },
         invoices: {
           count: totalInvoices,
+        },
+        users: {
+          count: userCount,
         },
       };
     } catch (error) {

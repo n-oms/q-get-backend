@@ -3,6 +3,7 @@ import { Scans as ScanType } from "../types";
 
 export const scansSchema = new mongoose.Schema<ScanType>(
   {
+    name: String,
     userId: String,
     vendorId: String,
     bankId: {
