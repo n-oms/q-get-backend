@@ -132,7 +132,8 @@ export class DashboardService {
     try {
       switch (queryId) {
         case "scans":
-          return await scans.find(query);
+          const { phoneNumber, ...scanQuery } = query;
+          return await scans.find(scanQuery);
         case "applications":
           return await applications.find(query);
         case "billed":
