@@ -1,5 +1,4 @@
 import { OtpApiHandler } from "@/handlers";
-import { GetDashboardDataHandler } from "@/handlers/dashboard/vendors/get/handler";
 import { APP_CONSTANTS, HTTP_METHODS } from "@/libs/constants/common";
 import { Operations } from "@/libs/enums/common";
 import { errorHandler } from "@/libs/error/errorHandler";
@@ -7,12 +6,13 @@ import { IHandler } from "@/libs/types/common";
 import { validate } from "@/libs/validations/api";
 import { authorizeRequest } from "@/middlewares/authorizer/authorizer";
 import { Express } from "express";
-import { MobileVersionHandler } from "@/handlers/mobile-version/get-mobile-version/handler";
-import { GetApplicationsDataHandler } from "@/handlers/applications/get/handler";
-import { CheckAuthorizationHandler } from "@/handlers/authorization/check-authorization/handler";
-import { InvoiceApiPostHandler } from "@/handlers/invoice/post/handler";
-import { GetScanHandler } from "@/handlers/scans/get/handler";
-import { GetUserHandler } from "@/handlers/users/getMe/handler";
+import { GetUserHandler } from "@/handlers/users";
+import { GetScanHandler } from "@/handlers/scans";
+import { CheckAuthorizationHandler } from "@/handlers/authorization";
+import { InvoiceApiPostHandler } from "@/handlers/invoice";
+import { MobileVersionHandler } from "@/handlers/mobile-version";
+import { GetDashboardDataHandler } from "@/handlers/dashboard";
+import { GetApplicationsDataHandler } from "@/handlers/applications";
 
 const MAP_KEY_PAIR = [
   [Operations.CREATE, HTTP_METHODS.POST],
@@ -43,13 +43,14 @@ export const registerRoutes = function (app: Express) {
 
 function getAllRouteHandlers(): Array<IHandler> {
   const routeHandlers: Array<IHandler> = [];
+  routeHandlers.push(new GetDashboardDataHandler());
+  routeHandlers.push(new GetApplicationsDataHandler());
+  routeHandlers.push(new GetUserHandler());
   routeHandlers.push(new OtpApiHandler());
   routeHandlers.push(new MobileVersionHandler());
   routeHandlers.push(new CheckAuthorizationHandler());
   routeHandlers.push(new InvoiceApiPostHandler());
   routeHandlers.push(new GetScanHandler());
-  routeHandlers.push(new GetDashboardDataHandler());
-  routeHandlers.push(new GetApplicationsDataHandler());
-  routeHandlers.push(new GetUserHandler());
+
   return routeHandlers;
 }

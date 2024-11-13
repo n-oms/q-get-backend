@@ -1,0 +1,1 @@
+export * from './get-mobile-version/handler'
