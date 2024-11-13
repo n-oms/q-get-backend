@@ -1,9 +1,11 @@
 import { ApplicationStatus, VendorCreditStatus } from "../mongo/enums";
-import { applications } from "../mongo/models/applications";
-import { Invoices } from "../mongo/models/invoice";
-import { scans } from "../mongo/models/scans";
-import { vendorCredits } from "../mongo/models/vendor-credits";
-import { users } from "../mongo/schema";
+import {
+  applications,
+  Invoices,
+  scans,
+  users,
+  vendorCredits,
+} from "../mongo/models";
 import { VendorCreditsType } from "../mongo/types";
 import { QueryBuilderService } from "../queryBuilder/service";
 import { UserService } from "../user/service";
@@ -22,7 +24,13 @@ export class DashboardService {
     this.getTotalBilledCredits = this.getTotalBilledCredits.bind(this);
   }
 
-  async getCardData({ vendorId }: { vendorId: string }) {
+  async getCardData({
+    vendorId,
+    phoneNumber,
+  }: {
+    vendorId: string;
+    phoneNumber?: string;
+  }) {
     try {
       const scansCount = await this.getScansCount({ vendorId });
       const { loginsCount, approvedCount } = await this.getLoginsApprovedCount({
@@ -35,6 +43,7 @@ export class DashboardService {
 
       const userCount = await this.userService.getUserCountByVendorId({
         vendorId,
+        phoneNumber,
       });
 
       return {
@@ -134,6 +143,7 @@ export class DashboardService {
         case "users":
           const filteredUsers = await users.find({
             vendorId: query.vendorId,
+            phoneNumber: { $ne: query.phoneNumber },
           });
           return filteredUsers;
         default:

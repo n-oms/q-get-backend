@@ -9,8 +9,8 @@ export class UserService {
     const result = await users.find({ vendorId });
     return result;
   }
-  async getUserCountByVendorId({ vendorId }: { vendorId: string }) {
-    const result = await users.countDocuments({ vendorId });
+  async getUserCountByVendorId({ vendorId ,phoneNumber}: { vendorId: string,phoneNumber:string }) {
+    const result = await users.countDocuments({ vendorId, phoneNumber: { $ne: phoneNumber } });
     return result;
   }
 }
