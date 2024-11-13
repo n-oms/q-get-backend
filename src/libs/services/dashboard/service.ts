@@ -10,42 +10,30 @@ import { UserService } from "../user/service";
 
 export class DashboardService {
   private readonly queryBuilder: QueryBuilderService;
-
+  private readonly userService: UserService;
   constructor() {
     this.queryBuilder = new QueryBuilderService();
+    this.userService = new UserService();
     this.getCardData = this.getCardData.bind(this);
     this.getTableData = this.getTableData.bind(this);
     this.getCreditsBilled = this.getCreditsBilled.bind(this);
+    this.getScansCount = this.getScansCount.bind(this);
+    this.getLoginsApprovedCount = this.getLoginsApprovedCount.bind(this);
+    this.getTotalBilledCredits = this.getTotalBilledCredits.bind(this);
   }
 
   async getCardData({ vendorId }: { vendorId: string }) {
     try {
-      const scansCount = await scans.countDocuments({ vendorId });
-      const aggregationQuery = this.queryBuilder.buildAgrregationQuery({
-        match: {
-          vendorId: vendorId,
-          status: {
-            $in: [ApplicationStatus.LOGIN, ApplicationStatus.APPROVED],
-          }, // Include other statuses you want to count
-        },
-        group: {
-          _id: "$status",
-          count: { $sum: 1 },
-        },
-      });
-      const applicationQueryResponse = await applications.aggregate(
-        aggregationQuery
-      );
-
-      // Total credits billed for the vendor
-      const toBeRaisedCredits = await vendorCredits.find({
+      const scansCount = await this.getScansCount({ vendorId });
+      const { loginsCount, approvedCount } = await this.getLoginsApprovedCount({
         vendorId,
-        status: VendorCreditStatus.TO_BE_RAISED,
       });
-      const creditsBilled = this.getCreditsBilled(toBeRaisedCredits);
+
+      const creditsBilled = await this.getTotalBilledCredits({ vendorId });
+
       const totalInvoices = await Invoices.countDocuments({ vendorId });
 
-      const userCount = await new UserService().getUserCountByVendorId({
+      const userCount = await this.userService.getUserCountByVendorId({
         vendorId,
       });
 
@@ -54,16 +42,10 @@ export class DashboardService {
           count: scansCount,
         },
         logins: {
-          count:
-            applicationQueryResponse.find(
-              (item) => item._id === ApplicationStatus.LOGIN
-            )?.count || 0,
+          count: loginsCount,
         },
         approved: {
-          count:
-            applicationQueryResponse.find(
-              (item) => item._id === ApplicationStatus.APPROVED
-            )?.count || 0,
+          count: approvedCount,
         },
         billed: {
           value: creditsBilled,
@@ -78,6 +60,50 @@ export class DashboardService {
     } catch (error) {
       throw error;
     }
+  }
+
+  private async getScansCount({ vendorId }: { vendorId: string }) {
+    return await scans.countDocuments({ vendorId });
+  }
+
+  private async getLoginsApprovedCount({ vendorId }: { vendorId: string }) {
+    const aggregationQuery = this.queryBuilder.buildAgrregationQuery({
+      match: {
+        vendorId: vendorId,
+        status: {
+          $in: [ApplicationStatus.LOGIN, ApplicationStatus.APPROVED],
+        },
+      },
+      group: {
+        _id: "$status",
+        count: { $sum: 1 },
+      },
+    });
+
+    const applicationQueryResponse = await applications.aggregate(
+      aggregationQuery
+    );
+
+    const approvedCount =
+      applicationQueryResponse.find(
+        (item) => item._id === ApplicationStatus.APPROVED
+      )?.count || 0;
+
+    const loginsCount =
+      applicationQueryResponse.find(
+        (item) => item._id === ApplicationStatus.LOGIN
+      )?.count || 0;
+    return { approvedCount, loginsCount };
+  }
+
+  private async getTotalBilledCredits({ vendorId }: { vendorId: string }) {
+    const toBeRaisedCredits = await vendorCredits.find({
+      vendorId,
+      status: VendorCreditStatus.TO_BE_RAISED,
+    });
+
+    const creditsBilled = this.getCreditsBilled(toBeRaisedCredits);
+    return creditsBilled;
   }
 
   private getCreditsBilled(credits: VendorCreditsType[]) {
@@ -106,9 +132,10 @@ export class DashboardService {
             status: VendorCreditStatus.TO_BE_RAISED,
           });
         case "users":
-          return await users.find({
+          const filteredUsers = await users.find({
             vendorId: query.vendorId,
           });
+          return filteredUsers;
         default:
           throw new Error("Invalid query id");
       }

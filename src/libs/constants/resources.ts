@@ -8,4 +8,5 @@ export const HTTP_RESOURCES = {
     AUTHORIZATION: {
         CHECK_AUTHORIZATION: "checkAuthorization",
     },
+    CARDS: 'cards',
 };

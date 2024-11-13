@@ -6,6 +6,31 @@ import {
   VendorRegistrationStatus,
 } from "./enums";
 
+export interface BankCard extends Document {
+  cardId: string;
+  title: string;
+  link: string;
+  bankName: string;
+  imageUrl?: {
+    s3Key: string;
+    fileType: string;
+    fileName: string;
+    imageUrl: string;
+  };
+  bankLogo?: {
+    s3Key: string;
+    fileType: string;
+    fileName: string;
+    imageUrl: string;
+  };
+  type: "CODE" | "IMAGE";
+  orientation: "PORTRAIT" | "LANDSCAPE";
+  redirectParam?: string;
+  benefits: {
+    title: string;
+    items: string[];
+  };
+}
 export type Otp = {
   phoneNumber: string;
   verified: boolean;

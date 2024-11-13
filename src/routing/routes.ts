@@ -7,11 +7,11 @@ import { IHandler } from "@/libs/types/common";
 import { validate } from "@/libs/validations/api";
 import { authorizeRequest } from "@/middlewares/authorizer/authorizer";
 import { Express } from "express";
-import {MobileVersionHandler} from '@/handlers/handling/mobile-version';
+import {MobileVersionHandler} from '@/handlers/mobile-version/get-mobile-version/handler';
 import { GetApplicationsDataHandler } from "@/handlers/applications/get/handler";
 import { GetScanHandler } from "@/handlers/scans/get/handler";
-import { GetUserHandler } from "@/handlers/users/getme/handler";
-import { CheckAuthorizationHandler } from "@/handlers/authorization/check-authorization";
+import { GetUserHandler } from "@/handlers/users/getMe/handler";
+import { CheckAuthorizationHandler } from "@/handlers/authorization/check-authorization/handler";
 import { InvoiceApiPostHandler } from "@/handlers/invoice/post/handler";
 
 
