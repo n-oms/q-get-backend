@@ -1,1 +1,1 @@
-export * from './getMe/handler'
+export * from './get-current-user/handler'
