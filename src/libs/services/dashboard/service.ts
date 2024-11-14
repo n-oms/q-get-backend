@@ -130,15 +130,15 @@ export class DashboardService {
     query: Record<string, any>;
   }) {
     try {
+      const { phoneNumber, ...scanQuery } = query;
       switch (queryId) {
         case "scans":
-          const { phoneNumber, ...scanQuery } = query;
           return await scans.find(scanQuery);
         case "applications":
-          return await applications.find(query);
+          return await applications.find(scanQuery);
         case "billed":
           return await vendorCredits.find({
-            ...query,
+            ...scanQuery,
             status: VendorCreditStatus.TO_BE_RAISED,
           });
         case "users":
