@@ -12,7 +12,7 @@ import {
 import { env } from "@/env/env";
 import { OtpDBService } from "../otp/service";
 import { UserService } from "../user/service";
-import { users } from "../mongo/schema";
+import { Users } from "../mongo/schema";
 import { JwtService } from "../jwt/jwtService";
 
 export class SmsClient {
@@ -73,7 +73,6 @@ export class SmsClient {
   async initOtpVerification(
     input: SendOtp,
   ): Promise<InitOtpVerificationResponse> {
-    // Connecting to the Mongo DB
 
     // Getting existing otp entry from the database
     const otpEntry = await this.otpDbClient.getOtpEntry(input.to);
@@ -184,7 +183,7 @@ export class SmsClient {
     await this.otpDbClient.updateOtpEntry({ phoneNumber, verified: true });
 
     // Getting the verified user info from the database
-    const user = await users.findOne({ phoneNumber })
+    const user = await Users.findOne({ phoneNumber })
     resultObj.user = user.toJSON()
     
     if (generateToken) {

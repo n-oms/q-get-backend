@@ -1,10 +1,10 @@
 import { ApplicationStatus, VendorCreditStatus } from "../mongo/enums";
 import {
-  applications,
+  Applications,
   Invoices,
-  scans,
-  users,
-  vendorCredits,
+  Scans,
+  Users,
+  VendorCredits,
 } from "../mongo/models";
 import { VendorCreditsType } from "../mongo/types";
 import { QueryBuilderService } from "../queryBuilder/service";
@@ -72,7 +72,7 @@ export class DashboardService {
   }
 
   private async getScansCount({ vendorId }: { vendorId: string }) {
-    return await scans.countDocuments({ vendorId });
+    return await Scans.countDocuments({ vendorId });
   }
 
   private async getLoginsApprovedCount({ vendorId }: { vendorId: string }) {
@@ -89,7 +89,7 @@ export class DashboardService {
       },
     });
 
-    const applicationQueryResponse = await applications.aggregate(
+    const applicationQueryResponse = await Applications.aggregate(
       aggregationQuery
     );
 
@@ -106,7 +106,7 @@ export class DashboardService {
   }
 
   private async getTotalBilledCredits({ vendorId }: { vendorId: string }) {
-    const toBeRaisedCredits = await vendorCredits.find({
+    const toBeRaisedCredits = await VendorCredits.find({
       vendorId,
       status: VendorCreditStatus.TO_BE_RAISED,
     });
@@ -116,7 +116,7 @@ export class DashboardService {
   }
 
   private getCreditsBilled(credits: VendorCreditsType[]) {
-    if (vendorCredits.length === 0) {
+    if (credits.length === 0) {
       return 0;
     }
     return credits.reduce((acc, credit) => acc + credit.credit, 0);
@@ -133,16 +133,16 @@ export class DashboardService {
       switch (queryId) {
         case "scans":
           const { phoneNumber, ...scanQuery } = query;
-          return await scans.find(scanQuery);
+          return await Scans.find(scanQuery);
         case "applications":
-          return await applications.find(query);
+          return await Applications.find(query);
         case "billed":
-          return await vendorCredits.find({
+          return await VendorCredits.find({
             ...query,
             status: VendorCreditStatus.TO_BE_RAISED,
           });
         case "users":
-          const filteredUsers = await users.find({
+          const filteredUsers = await Users.find({
             vendorId: query.vendorId,
             phoneNumber: { $ne: query.phoneNumber },
           });

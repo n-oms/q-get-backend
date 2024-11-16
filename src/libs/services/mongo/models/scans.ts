@@ -15,6 +15,6 @@ export const scansSchema = new mongoose.Schema<ScanType>(
   { timestamps: true },
 );
 
-export const scans =
+export const Scans =
   (mongoose.models.scans as mongoose.Model<ScanType>) ||
   mongoose.model<ScanType>("scans", scansSchema);

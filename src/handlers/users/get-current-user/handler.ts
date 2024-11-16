@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ApiRequest, IHandler } from "@/libs/types/common";
 import { Operations } from "@/libs/enums/common";
-import { users } from "@/libs/services/mongo/models/user";
+import { Users } from "@/libs/services/mongo/models/user";
 
 export class GetUserHandler implements IHandler {
   operation: Operations;
@@ -32,7 +32,7 @@ export class GetUserHandler implements IHandler {
     }
 
     try {
-      const user = await users.findOne({ phoneNumber }).exec();
+      const user = await Users.findOne({ phoneNumber }).exec();
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });

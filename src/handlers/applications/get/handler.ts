@@ -37,6 +37,5 @@ export class GetApplicationsDataHandler implements IHandler {
     } catch (error) {
       next(error);
     }
-    return res.status(200).send({ message: "Token is valid" });
   }
 }

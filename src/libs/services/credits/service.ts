@@ -1,5 +1,5 @@
 import { VendorCreditStatus } from "../mongo/enums";
-import { vendorCredits } from "../mongo/models/vendor-credits";
+import { VendorCredits } from "../mongo/models/vendor-credits";
 import {
   AttachInvoiceRequestIdsToCreditsInput,
   GetCreditsToRaiseInvoiceInput,
@@ -7,7 +7,7 @@ import {
 
 export class VendorCreditService {
   async getCreditsToRaiseInvoice({ vendorId }: GetCreditsToRaiseInvoiceInput) {
-    const credits = await vendorCredits
+    const credits = await VendorCredits
       .find({ vendorId, status: VendorCreditStatus.TO_BE_RAISED })
       .exec();
     return credits;
@@ -18,7 +18,7 @@ export class VendorCreditService {
   ) {
     const attachCreditPromises = input.toBeRaisedCreditIds.map(
       async (creditId) => {
-        const updateResponse = await vendorCredits.updateOne(
+        const updateResponse = await VendorCredits.updateOne(
           {
             creditId,
           },

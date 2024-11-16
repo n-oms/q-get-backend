@@ -2,7 +2,7 @@ import { HTTP_RESOURCES } from "@/libs/constants/resources";
 import { Operations } from "@/libs/enums/common";
 import { BadRequestExecption } from "@/libs/error/error";
 import { UserType } from "@/libs/services/mongo/enums";
-import { scans } from "@/libs/services/mongo/models/scans";
+import { Scans } from "@/libs/services/mongo/models/scans";
 import { ApiRequest, ApiResponse, IHandler } from "@/libs/types/common";
 
 export class GetScanHandler implements IHandler {
@@ -24,11 +24,10 @@ export class GetScanHandler implements IHandler {
     public async handler(req: ApiRequest, res: ApiResponse, next) {
         const userInfo = req.userInfo
         try {
-
             if (userInfo.userType !== UserType.Vendor || !userInfo.vendorId) {
                 throw new BadRequestExecption("User is not authorized to access this resource")
             }
-            const userScans = await scans.find({ vendorId: userInfo.vendorId })
+            const userScans = await Scans.find({ vendorId: userInfo.vendorId })
             return res.status(200).json(userScans);
         } catch (error) {
             next(error)

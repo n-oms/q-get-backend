@@ -1,9 +1,13 @@
 import mongoose from "mongoose";
-import { Organization } from "../types";
+import { Organization as OrganizationType } from "../types";
 
-export const organizationSchema = new mongoose.Schema<Organization>({
-orgId: String
-}, {strict: false});
+export const organizationSchema = new mongoose.Schema<OrganizationType>(
+  {
+    orgId: String,
+  },
+  { strict: false }
+);
 
-
-export const organization = mongoose.models.organization as mongoose.Model<Organization> || mongoose.model<Organization>("organization", organizationSchema);
+export const Organization =
+  (mongoose.models.organization as mongoose.Model<OrganizationType>) ||
+  mongoose.model<OrganizationType>("organization", organizationSchema);

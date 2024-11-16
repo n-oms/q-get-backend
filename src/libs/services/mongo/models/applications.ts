@@ -20,6 +20,6 @@ export const applicationSchema = new mongoose.Schema<ApplicationType>(
   { timestamps: true },
 );
 
-export const applications =
+export const Applications =
   (mongoose.models.applications as mongoose.Model<ApplicationType>) ||
   mongoose.model<ApplicationType>("applications", applicationSchema);

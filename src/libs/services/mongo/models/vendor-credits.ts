@@ -19,6 +19,6 @@ export const vendorCreditsSchema = new mongoose.Schema<VendorCreditsType>(
   { timestamps: true },
 );
 
-export const vendorCredits =
+export const VendorCredits =
   (mongoose.models.vendorCredits as mongoose.Model<VendorCreditsType>) ||
   mongoose.model<VendorCreditsType>("vendorCredits", vendorCreditsSchema);

@@ -1,11 +1,11 @@
 import { DbError } from "@/libs/error/error";
-import { organization } from "../mongo/models/organization";
+import { Organization } from "../mongo/models/organization";
 
 export class OrganizationService {
 
   async getOrganizationInfo() {
     try {
-      const orgInfo = await organization.findOne();
+      const orgInfo = await Organization.findOne();
       return orgInfo.toJSON();
     } catch (error) {
       throw new DbError(
