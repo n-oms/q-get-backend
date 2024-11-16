@@ -130,6 +130,7 @@ export class DashboardService {
     query: Record<string, any>;
   }) {
     try {
+      const { phoneNumber, ...scanQuery } = query;
       switch (queryId) {
         case "scans":
           const { phoneNumber, ...scanQuery } = query;
