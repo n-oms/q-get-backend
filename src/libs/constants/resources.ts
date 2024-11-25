@@ -9,4 +9,5 @@ export const HTTP_RESOURCES = {
         CHECK_AUTHORIZATION: "checkAuthorization",
     },
     CARDS: 'cards',
+    MESSAGES:'usermessages'
 };

@@ -49,7 +49,7 @@ export class BillingService {
     const message = {
       eventId: SQS_EVENT_IDS.RAISE_INVOICE_REQUEST,
       vendorId: input.vendorId,
-      tenantId: organization.orgId,
+      tenantId: organization.tenantId,
       invoiceReqId: invoiceId,
       eventDetails: {
         applicationList: creditsToBeRaised,
@@ -60,7 +60,7 @@ export class BillingService {
     // Pushing raise invoice request message to SQS
     const queueResponse = await this.sqsService.sendMessage({
       queueUrl: SQS_QUEUES.RAISE_INVOICE_REQUEST_QUEUE.url,
-      messageBody: message,
+      message: message,
     });
 
     if (queueResponse.$metadata.httpStatusCode === 200) {
