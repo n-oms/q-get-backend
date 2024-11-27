@@ -13,6 +13,8 @@ import { InvoiceApiPostHandler } from "@/handlers/invoice";
 import { MobileVersionHandler } from "@/handlers/mobile-version";
 import { GetDashboardDataHandler } from "@/handlers/dashboard";
 import { GetApplicationsDataHandler } from "@/handlers/applications";
+import { GetCardsHandler } from "@/handlers/cards/get/handler";
+import { CreateCardHandler } from "@/handlers/cards/post/handler";
 import { GetMessagesHandler, SendMessageHandler } from "@/handlers/messages";
 
 const MAP_KEY_PAIR = [
@@ -52,6 +54,9 @@ function getAllRouteHandlers(): Array<IHandler> {
   routeHandlers.push(new CheckAuthorizationHandler());
   routeHandlers.push(new InvoiceApiPostHandler());
   routeHandlers.push(new GetScanHandler());
+  routeHandlers.push(new GetCardsHandler());
+  routeHandlers.push(new CreateCardHandler());
+
   routeHandlers.push(new GetMessagesHandler());
   routeHandlers.push(new SendMessageHandler());
 
