@@ -5,6 +5,7 @@ import { SmsClient } from "@/libs/services/sms/service";
 import { BadRequestExecption } from "@/libs/error/error";
 import { HTTP_RESOURCES } from "@/libs/constants/resources";
 import { OTP_RESPONSE_CODES } from "@/libs/services/sms/utils";
+import { OrganizationService } from "@/libs/services/organization/service";
 
 export class OtpApiHandler implements IHandler {
   operation: Operations;
@@ -60,6 +61,9 @@ export class OtpApiHandler implements IHandler {
           if (result.status === OTP_RESPONSE_CODES.INVALID_OTP_CODE) {
             throw new BadRequestExecption("Invalid OTP code");
           }
+          const orgInfo = new OrganizationService().getOrganizationInfo();
+          result.wsUrl = (await orgInfo).wsUrl;
+          console.log("OTP VERIFIED DATA :", result);
           return res.status(200).send(result);
         }
 

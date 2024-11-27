@@ -15,6 +15,7 @@ import { GetDashboardDataHandler } from "@/handlers/dashboard";
 import { GetApplicationsDataHandler } from "@/handlers/applications";
 import { GetCardsHandler } from "@/handlers/cards/get/handler";
 import { CreateCardHandler } from "@/handlers/cards/post/handler";
+import { GetMessagesHandler, SendMessageHandler } from "@/handlers/messages";
 
 const MAP_KEY_PAIR = [
   [Operations.CREATE, HTTP_METHODS.POST],
@@ -56,6 +57,8 @@ function getAllRouteHandlers(): Array<IHandler> {
   routeHandlers.push(new GetCardsHandler());
   routeHandlers.push(new CreateCardHandler());
 
+  routeHandlers.push(new GetMessagesHandler());
+  routeHandlers.push(new SendMessageHandler());
 
   return routeHandlers;
 }

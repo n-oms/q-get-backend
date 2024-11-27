@@ -8,7 +8,7 @@ export const HTTP_RESOURCES = {
     AUTHORIZATION: {
         CHECK_AUTHORIZATION: "checkAuthorization",
     },
-    CARDS: 'cards',
     GET_CARDS: 'getCards', 
     CREATE_CARD: 'createCard',
+    MESSAGES:'usermessages',
 };

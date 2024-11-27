@@ -105,7 +105,12 @@ export type VendorCreditsType = {
 };
 
 export type Organization = {
-  orgId: string;
+  tenantId: string;
+  wsUrl: string;
+  features:{
+    loans: boolean
+    insurances: boolean
+  }
 };
 
 export type Invoice = {

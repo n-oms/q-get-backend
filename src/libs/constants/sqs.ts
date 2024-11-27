@@ -9,4 +9,7 @@ export const SQS_QUEUES = {
   RAISE_INVOICE_REQUEST_QUEUE: {
     url: constructSqsQueueUrl(env.RAISE_INVOICE_SQS_QUEUE_NAME),
   },
+  MESSAGE_QUEUE_URL: {
+    url: constructSqsQueueUrl(env.MESSAGE_QUEUE_NAME),
+  },
 };
