@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { IHandler } from '@/libs/types/common'; 
 import { Operations } from '@/libs/enums/common'; 
 import { HTTP_RESOURCES } from '@/libs/constants/common'; 
+import { OPERATION_IDS } from '@/libs/constants/operation-ids';
 
 export class MobileVersionHandler implements IHandler {
     operation: Operations;
@@ -14,7 +15,7 @@ export class MobileVersionHandler implements IHandler {
     constructor() {
         this.operation = Operations.READ; 
         this.isIdempotent = true; 
-        this.operationId = "mobileVersion"; 
+        this.operationId = OPERATION_IDS.MOBILE_VERSION.GET_MOBILE_VERSION; 
         this.resource = HTTP_RESOURCES.MOBILE_VERSION; 
         this.validations = []; 
         this.isAuthorizedAccess =true;

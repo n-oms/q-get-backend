@@ -5,6 +5,7 @@ import { NextFunction } from "express";
 import { InvoiceApiActionType, InvoiceApiRequestType } from "./types";
 import { BadRequestExecption } from "@/libs/error/error";
 import { BillingService } from "@/libs/services/billing/billing.service";
+import { OPERATION_IDS } from "@/libs/constants/operation-ids";
 
 export class InvoiceApiPostHandler implements IHandler {
   operation: Operations;
@@ -17,7 +18,7 @@ export class InvoiceApiPostHandler implements IHandler {
   constructor() {
     this.operation = Operations.INVOKE;
     this.isIdempotent = false;
-    this.operationId = "invoice";
+    this.operationId = OPERATION_IDS.INVOICE.INVOICE;
     this.resource = HTTP_RESOURCES.INVOICES;
     this.validations = [];
     this.isAuthorizedAccess = true;

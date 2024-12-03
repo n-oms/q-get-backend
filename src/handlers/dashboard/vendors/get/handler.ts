@@ -5,6 +5,7 @@ import { DashboardService } from "@/libs/services/dashboard/service";
 import { ApiRequest, ApiResponse, IHandler } from "@/libs/types/common";
 import { DashboardQueryTypes, GetDashboardData } from "../../types";
 import { UserType } from "@/libs/services/mongo/enums";
+import { OPERATION_IDS } from "@/libs/constants/operation-ids";
 
 export class GetDashboardDataHandler implements IHandler {
   operation: Operations;
@@ -18,7 +19,7 @@ export class GetDashboardDataHandler implements IHandler {
     this.operation = Operations.READ;
     this.isIdempotent = false;
     this.isAuthorizedAccess = true;
-    this.operationId = "GET_OTP";
+    this.operationId = OPERATION_IDS.VENDOR_DASHBOARD.GET_OTP;
     this.resource = HTTP_RESOURCES.DASHBOARD;
     this.validations = [];
     this.dashboardService = new DashboardService();

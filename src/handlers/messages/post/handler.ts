@@ -5,6 +5,7 @@ import { ApiResponse, IHandler } from "@/libs/types/common";
 import { SqsService } from "@/libs/services/sqs/service";
 import { GetMessageInput } from "@/handlers/applications/types";
 import { SQS_QUEUES } from "@/libs/constants/sqs";
+import { OPERATION_IDS } from "@/libs/constants/operation-ids";
 
 export class SendMessageHandler implements IHandler {
   operation: Operations;
@@ -18,7 +19,7 @@ export class SendMessageHandler implements IHandler {
   constructor() {
     this.operation = Operations.CREATE;
     this.isIdempotent = false;
-    this.operationId = "SEND_MESSAGE";
+    this.operationId = OPERATION_IDS.MESSAGES.SEND_MESSAGES;
     this.resource = HTTP_RESOURCES.MESSAGES;
     this.isAuthorizedAccess = true;
     this.validations = [];

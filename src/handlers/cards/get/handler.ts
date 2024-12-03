@@ -1,3 +1,4 @@
+import { OPERATION_IDS } from "@/libs/constants/operation-ids";
 import { HTTP_RESOURCES } from "@/libs/constants/resources";
 import { Operations } from "@/libs/enums/common";
 import { CardService } from "@/libs/services/cards/service";
@@ -15,7 +16,7 @@ export class GetCardsHandler implements IHandler {
     this.operation = Operations.READ;
     this.isIdempotent = false;
     this.isAuthorizedAccess = false;
-    this.operationId = "GET_CARDS";
+    this.operationId = OPERATION_IDS.CARDS.GET_CARDS;
     this.resource = HTTP_RESOURCES.GET_CARDS;
     this.validations = [];
     this.handler = this.handler.bind(this);

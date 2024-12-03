@@ -1,3 +1,4 @@
+import { OPERATION_IDS } from "@/libs/constants/operation-ids";
 import { HTTP_RESOURCES } from "@/libs/constants/resources";
 import { Operations } from "@/libs/enums/common";
 import { BadRequestExecption } from "@/libs/error/error";
@@ -15,7 +16,7 @@ export class GetScanHandler implements IHandler {
     constructor() {
         this.operation = Operations.READ;
         this.isIdempotent = true;
-        this.operationId = "GET_SCANS";
+        this.operationId = OPERATION_IDS.SCANS.GET_SCANS;
         this.resource = HTTP_RESOURCES.SCANS;
         this.isAuthorizedAccess = true
         this.validations = [];

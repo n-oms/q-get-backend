@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ApiRequest, IHandler } from "@/libs/types/common";
 import { Operations } from "@/libs/enums/common";
 import { Users } from "@/libs/services/mongo/models/user";
+import { OPERATION_IDS } from "@/libs/constants/operation-ids";
 
 export class GetUserHandler implements IHandler {
   operation: Operations;
@@ -14,7 +15,7 @@ export class GetUserHandler implements IHandler {
   constructor() {
     this.operation = Operations.READ;
     this.isIdempotent = true;
-    this.operationId = "getUser";
+    this.operationId = OPERATION_IDS.USER.GET_CURRENT_USER;
     this.resource = "getMe";
     this.validations = [];
     this.isAuthorizedAccess = true;
