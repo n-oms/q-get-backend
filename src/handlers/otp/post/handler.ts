@@ -5,6 +5,7 @@ import { SmsClient } from "@/libs/services/sms/service";
 import { BadRequestExecption } from "@/libs/error/error";
 import { HTTP_RESOURCES } from "@/libs/constants/resources";
 import { OTP_RESPONSE_CODES } from "@/libs/services/sms/utils";
+import { UserService } from "@/libs/services/user/service";
 
 export class OtpApiHandler implements IHandler {
   operation: Operations;
@@ -14,6 +15,7 @@ export class OtpApiHandler implements IHandler {
   validations: any[];
   smsClient: SmsClient;
   isAuthorizedAccess?: boolean;
+  private readonly userService: UserService;
   constructor() {
     this.operation = Operations.CREATE;
     this.isIdempotent = false;
@@ -23,6 +25,7 @@ export class OtpApiHandler implements IHandler {
     this.smsClient = new SmsClient();
     this.isAuthorizedAccess = false;
     this.handler = this.handler.bind(this);
+    this.userService = new UserService();
   }
 
   async handler(req: ApiRequest<OtpApiHandlerRequest>, res: ApiResponse, next) {
@@ -39,6 +42,10 @@ export class OtpApiHandler implements IHandler {
 
       switch (action) {
         case OtpHandlerActions.SEND_OTP: {
+          const user = await this.userService.getVendorUser({ phoneNumber });
+          if (!user) {
+            throw new BadRequestExecption("User is not registered as a vendor");
+          }
           const result = await this.smsClient.initOtpVerification({
             to: phoneNumber,
           });
