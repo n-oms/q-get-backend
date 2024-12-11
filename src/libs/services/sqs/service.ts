@@ -1,26 +1,31 @@
-import { SQS } from "@aws-sdk/client-sqs";
-import { SendMessageInput } from "./types";
+import { SendMessageCommand, SQS } from "@aws-sdk/client-sqs";
+import { QueuePayload, SendMessageInput } from "./types";
 import { AWS_CONFIG } from "@/libs/constants/common";
 
 export class SqsService {
   private readonly sqs: SQS;
+  static serviceClient: SqsService;
   constructor() {
     this.sqs = new SQS({ region: AWS_CONFIG.region });
     this.sendMessage = this.sendMessage.bind(this);
   }
+  static getServiceClient(): SqsService {
+    if (!SqsService.serviceClient) {
+      SqsService.serviceClient = new SqsService();
+    }
+    return SqsService.serviceClient;
+  }
 
-  async sendMessage(input: SendMessageInput) {
+  async sendMessage({ message, queueUrl }: QueuePayload) {
     try {
-      const response = await this.sqs.sendMessage({
-        QueueUrl: input.queueUrl,
-        MessageBody: JSON.stringify(input.messageBody),
+      const command = new SendMessageCommand({
+        QueueUrl: queueUrl,
+        MessageBody: JSON.stringify(message),
       });
-      if (response.$metadata.httpStatusCode !== 200) {
-        throw new Error("Failed to send message to SQS");
-      }
-      return response;
+      return this.sqs.send(command);
     } catch (error) {
-        throw new Error("Failed to send message to SQS");
+      console.log(error);
+      throw error;
     }
   }
 }

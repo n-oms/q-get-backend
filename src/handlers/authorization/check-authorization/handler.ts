@@ -4,6 +4,7 @@ import { ApplicationsService } from "@/libs/services/applications/service";
 import { ApiRequest, ApiResponse, IHandler } from "@/libs/types/common";
 import { GetApplicationsHandlerInput } from "@/handlers/applications/types";
 import { NextFunction } from "express";
+import { OPERATION_IDS } from "@/libs/constants/operation-ids";
 
 export class CheckAuthorizationHandler implements IHandler {
     operation: Operations;
@@ -18,7 +19,7 @@ export class CheckAuthorizationHandler implements IHandler {
         this.operation = Operations.READ;
         this.isIdempotent = false;
         this.isAuthorizedAccess = true;
-        this.operationId = "CHECK_AUTHORIZATION";
+        this.operationId = OPERATION_IDS.AUTHORIZATION.CHECK_AUTHORIZATION;
         this.resource = HTTP_RESOURCES.AUTHORIZATION.CHECK_AUTHORIZATION;
         this.validations = [];
         this.applicationsService = new ApplicationsService();

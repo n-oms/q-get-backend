@@ -14,4 +14,5 @@ export const env = {
     RAISE_INVOICE_SQS_QUEUE_NAME: process.env.RAISE_INVOICE_SQS_QUEUE_NAME,
     AWS_REGION: process.env.AWS_REGION,
     AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
+    MESSAGE_QUEUE_NAME: process.env.MESSAGE_QUEUE_NAME
 }

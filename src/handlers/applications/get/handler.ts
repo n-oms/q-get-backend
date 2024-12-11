@@ -3,6 +3,7 @@ import { Operations } from "@/libs/enums/common";
 import { ApplicationsService } from "@/libs/services/applications/service";
 import { ApiRequest, ApiResponse, IHandler } from "@/libs/types/common";
 import { GetApplicationsHandlerInput } from "../types";
+import { OPERATION_IDS } from "@/libs/constants/operation-ids";
 
 export class GetApplicationsDataHandler implements IHandler {
   operation: Operations;
@@ -16,7 +17,7 @@ export class GetApplicationsDataHandler implements IHandler {
     this.operation = Operations.READ;
     this.isIdempotent = false;
     this.isAuthorizedAccess = true;
-    this.operationId = "GET_APPLICATIONS";
+    this.operationId = OPERATION_IDS.APPLICATIONS.GET_APPLICATIONS;
     this.resource = HTTP_RESOURCES.APPLICATIONS;
     this.validations = [];
     this.applicationsService = new ApplicationsService();

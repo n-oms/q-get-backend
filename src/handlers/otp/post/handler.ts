@@ -6,6 +6,7 @@ import { BadRequestExecption } from "@/libs/error/error";
 import { HTTP_RESOURCES } from "@/libs/constants/resources";
 import { OTP_RESPONSE_CODES } from "@/libs/services/sms/utils";
 import { UserService } from "@/libs/services/user/service";
+import { OrganizationService } from "@/libs/services/organization/service";
 
 export class OtpApiHandler implements IHandler {
   operation: Operations;
@@ -16,6 +17,7 @@ export class OtpApiHandler implements IHandler {
   smsClient: SmsClient;
   isAuthorizedAccess?: boolean;
   private readonly userService: UserService;
+  private readonly organizationService: OrganizationService;
   constructor() {
     this.operation = Operations.CREATE;
     this.isIdempotent = false;
@@ -26,6 +28,7 @@ export class OtpApiHandler implements IHandler {
     this.isAuthorizedAccess = false;
     this.handler = this.handler.bind(this);
     this.userService = new UserService();
+    this.organizationService = new OrganizationService();
   }
 
   async handler(req: ApiRequest<OtpApiHandlerRequest>, res: ApiResponse, next) {
@@ -67,6 +70,8 @@ export class OtpApiHandler implements IHandler {
           if (result.status === OTP_RESPONSE_CODES.INVALID_OTP_CODE) {
             throw new BadRequestExecption("Invalid OTP code");
           }
+          const orgInfo = await this.organizationService.getOrganizationInfo();
+          result.wsUrl = orgInfo.wsUrl;
           return res.status(200).send(result);
         }
 
