@@ -11,7 +11,7 @@ export class GetCardsHandler implements IHandler {
   resource: string;
   validations: any[];
   isAuthorizedAccess?: boolean;
-  cardsService: CardService
+  cardsService: CardService;
   constructor() {
     this.operation = Operations.READ;
     this.isIdempotent = false;
@@ -20,17 +20,21 @@ export class GetCardsHandler implements IHandler {
     this.resource = HTTP_RESOURCES.GET_CARDS;
     this.validations = [];
     this.handler = this.handler.bind(this);
-    this.cardsService = new CardService()
+    this.cardsService = new CardService();
   }
 
-  async handler(
-    req: ApiRequest,
-    res: ApiResponse,
-    next
-  ) {
+  async handler(req: ApiRequest, res: ApiResponse, next) {
     try {
-      const query = req.query || {}
-      const result = await this.cardsService.queryCards({queryObject: query})
+      const query =
+        (req.query as Record<string, any>) || ({} as Record<string, any>);
+      let result;
+      if ("searchString" in query) {
+        result = await this.cardsService.searchCards({
+          searchString: query.searchString,
+        });
+      } else {
+        result = await this.cardsService.queryCards({ queryObject: query });
+      }
       return res.status(200).send(result);
     } catch (error) {
       next(error);

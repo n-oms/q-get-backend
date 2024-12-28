@@ -7,6 +7,11 @@ export class CardService {
     return cards
   }
 
+  async searchCards({ searchString }: { searchString: string }) {
+    const cards = await Cards.find({ searchString: { $regex: searchString, $options: 'i' } });
+    return cards;
+  }
+
   async getCardById({ cardId }: { cardId: string }) {
     const result = await Cards.findOne({ cardId });
     return result.toJSON();
