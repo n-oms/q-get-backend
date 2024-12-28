@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { IHandler } from '@/libs/types/common'; 
 import { Operations } from '@/libs/enums/common'; 
-import { HTTP_RESOURCES } from '@/libs/constants/common'; 
 import { OPERATION_IDS } from '@/libs/constants/operation-ids';
+import { HTTP_RESOURCES } from '@/libs/constants/resources';
 
 export class MobileVersionHandler implements IHandler {
     operation: Operations;

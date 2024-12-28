@@ -1,3 +1,4 @@
+import { EnquiryServiceType } from "@/libs/constants/common";
 import {
   ApplicationStatus,
   UserStatus,
@@ -107,17 +108,57 @@ export type VendorCreditsType = {
 export type Organization = {
   tenantId: string;
   wsUrl: string;
-  features:{
-    loans: boolean
-    insurances: boolean
-  }
+  features: {
+    loans: boolean;
+    insurances: boolean;
+  };
 };
 
 export type Invoice = {
-    invoiceReqId: string;
-    amountPaid: number;
-    status: string;
-    amountRaised: number;
-    vendorId: string;
-    message: string;
+  invoiceReqId: string;
+  amountPaid: number;
+  status: string;
+  amountRaised: number;
+  vendorId: string;
+  message: string;
+};
+
+export type Faqs = {
+  question: string;
+  answer: string;
+  coverImageUrl?: string;
+  id: string;
+};
+
+export type BlogPost = {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  content: string;
+  imageUrl?: string;
+  category: 'CREDIT_CARD' | 'LOAN' | 'INSURANCE' | 'CIBIL' | 'FINANCIAL_TIPS';
+  tags: string[];
+  author: {
+    name: string;
+    avatar?: string;
+    bio?: string;
   };
+  publishedAt: Date;
+  readingTime: number;
+  relatedPosts?: string[];
+  seo: {
+    metaTitle: string;
+    metaDescription: string;
+    keywords: string[];
+    canonicalUrl?: string;
+  };
+}
+
+export type EnquiryRequest = {
+  id: string;
+  phoneNumber: string;
+  name: string;
+  enquiryServiceType: EnquiryServiceType;
+  lastSentAt: number;
+};

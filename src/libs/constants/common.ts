@@ -26,9 +26,6 @@ export const OPERATIONS = {
   UPDATE: "update",
   INVOKE: "invoke",
 };
-export const HTTP_RESOURCES = {
-  MOBILE_VERSION: "mobile-version",
-};
 
 export const SQS_EVENT_IDS = {
   RAISE_INVOICE_REQUEST: "raise-invoice-request",
@@ -37,4 +34,16 @@ export const SQS_EVENT_IDS = {
 export const AWS_CONFIG = {
   region: env.AWS_REGION || "us-east-1",
   accountId: env.AWS_ACCOUNT_ID,
+  s3: {
+    bucketName: env.S3_BUCKET_NAME
+  }
 };
+
+export enum EnquiryServiceType {
+  INSURANCE = "INSURANCE",
+  LOAN = "LOAN",
+  CREDIT_CARD = "CREDIT_CARD",
+  INVESTMENT = "INVESTMENT",
+  OTHER = "OTHER",
+}
+

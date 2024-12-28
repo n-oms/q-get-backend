@@ -6,8 +6,8 @@ export class JwtService {
 
     // Create a token with the phone number
     async createUserToken({ phoneNumber }: { phoneNumber: string }) {
-        const secret = env.JWT_SECRET;
-        const expiry = env.JWT_EXPIRY;
+        const secret = env.JWT_SECRET
+        const expiry = env.JWT_EXPIRY
         if (!secret) {
             throw new EnvNotFoundError('JWT_SECRET not found in the environment variables');
         }

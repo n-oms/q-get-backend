@@ -1,12 +1,13 @@
 import { SendMessageCommand, SQS } from "@aws-sdk/client-sqs";
 import { QueuePayload, SendMessageInput } from "./types";
 import { AWS_CONFIG } from "@/libs/constants/common";
+import { AwsService } from "../aws/service";
 
 export class SqsService {
   private readonly sqs: SQS;
   static serviceClient: SqsService;
   constructor() {
-    this.sqs = new SQS({ region: AWS_CONFIG.region });
+    this.sqs = AwsService.getSQSClient()
     this.sendMessage = this.sendMessage.bind(this);
   }
   static getServiceClient(): SqsService {

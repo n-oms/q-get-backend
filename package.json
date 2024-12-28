@@ -13,14 +13,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.687.0",
+    "@aws-sdk/client-s3": "^3.717.0",
+    "@aws-sdk/client-sqs": "^3.716.0",
+    "@aws-sdk/s3-request-presigner": "^3.717.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-validator": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1",
-    "pino-http": "^10.3.0"
+    "pino-http": "^10.3.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
