@@ -43,12 +43,12 @@ export class EnquiryHandler implements IHandler {
       const result = await this.enquiryService.sendEnquiry({
         enquiryServiceType: body.enquiryServiceType,
         userInfo,
+        data: body,
       });
 
       return res.status(200).json(result);
-
     } catch (error) {
-        next(error)
+      next(error);
     }
   }
 }
