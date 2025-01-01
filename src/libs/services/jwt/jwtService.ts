@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 
 export class JwtService {
 
-    // Create a token with the phone number
     async createUserToken({ phoneNumber }: { phoneNumber: string }) {
         const secret = env.JWT_SECRET
         const expiry = env.JWT_EXPIRY
@@ -17,7 +16,6 @@ export class JwtService {
         return jwt.sign({ phoneNumber }, secret, { expiresIn: expiry});
     }
 
-    // Decode the token and return the payload
     async decodeUserToken<T>(token: string) {
         try {
             const secret = env.JWT_SECRET;

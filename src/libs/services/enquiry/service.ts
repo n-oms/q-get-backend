@@ -1,11 +1,10 @@
 import { EnquiryServiceType } from "@/libs/constants/common";
+import { SQS_QUEUES } from "@/libs/constants/sqs";
+import { ClassUtils } from "@/libs/utils/classUtils";
+import { EnquiryModel } from "../mongo/models/enquiry";
 import { User } from "../mongo/types";
 import { OrganizationService } from "../organization/service";
 import { SqsService } from "../sqs/service";
-import { SQS_QUEUES } from "@/libs/constants/sqs";
-import { EnquiryModel } from "../mongo/models/enquiry";
-import { ClassUtils } from "@/libs/utils/classUtils";
-import { BadRequestExecption } from "@/libs/error/error";
 
 const ENQUIRY_REQUEST_EXPIRATION_TIME = 24 * 60 * 60 * 1000;
 
@@ -36,15 +35,11 @@ export class EnquiryService {
     if (!isLastEnquiryExpired) {
       return;
     }
-    
-    const messageData = {};
-    if (enquiryServiceType === EnquiryServiceType.CREDIT_CARD) {
-      if (!data?.cardName || !data?.bankName) {
-        throw new BadRequestExecption("Card or bank name not found");
-      }
-      messageData["cardName"] = data.cardName;
-      messageData["bankName"] = data.bankName;
-    }
+
+    const messageData = this.getServiceSpecificMessageData({
+      serviceType: enquiryServiceType,
+      data,
+    });
 
     const sqsPayload = await this.getSqsMessagePayload({
       userInfo,
@@ -67,6 +62,24 @@ export class EnquiryService {
       });
     } else {
       throw new Error("Failed to send enquiry");
+    }
+  }
+
+  getServiceSpecificMessageData({
+    data,
+    serviceType,
+  }: {
+    data: Record<string, unknown>;
+    serviceType: EnquiryServiceType;
+  }): Record<string, unknown> {
+    switch (serviceType) {
+      case EnquiryServiceType.CREDIT_CARD:
+        return {
+          cardName: data.cardName,
+          bankName: data.bankName,
+        };
+      default:
+        return {};
     }
   }
 

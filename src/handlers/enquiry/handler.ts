@@ -1,14 +1,11 @@
-import { env } from "@/env/env";
-import { EnquiryServiceType } from "@/libs/constants/common";
+import { HTTP_RESOURCES } from "@/libs/constants/resources";
 import { Operations } from "@/libs/enums/common";
-import { User } from "@/libs/services/mongo/types";
+import { EnquiryService } from "@/libs/services/enquiry/service";
 import { OrganizationService } from "@/libs/services/organization/service";
 import { SqsService } from "@/libs/services/sqs/service";
 import { ApiRequest, IHandler } from "@/libs/types/common";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { sendEnquiryBodySchema } from "./validation";
-import { EnquiryService } from "@/libs/services/enquiry/service";
-import { HTTP_RESOURCES } from "@/libs/constants/resources";
 
 export class EnquiryHandler implements IHandler {
   operation: Operations;

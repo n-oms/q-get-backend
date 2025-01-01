@@ -1,8 +1,7 @@
-import { UserType } from "../mongo/enums";
+import { UserStatus, UserType, VendorRegistrationStatus } from "../mongo/enums";
 import { Users } from "../mongo/schema";
 
 export class UserService {
-  
   async getUserByPhoneNumber({ phoneNumber }: { phoneNumber: string }) {
     const result = await Users.findOne({ phoneNumber });
     return result.toJSON();
@@ -33,5 +32,27 @@ export class UserService {
       phoneNumber: { $ne: phoneNumber },
     });
     return result;
+  }
+
+  async createCustomerUser({
+    phoneNumber,
+    name,
+    scannedVendorId,
+  }: {
+    phoneNumber: string;
+    name: string;
+    scannedVendorId?: string;
+  }) {
+    const user = await Users.create({
+      id: phoneNumber,
+      phoneNumber,
+      name,
+      userType: UserType.Customer,
+      status: UserStatus.SELF_REGISTERED_CUSTOMER,
+      isWelcomeMessageSent: false,
+      scannedVendorId,
+      vendorRegistrationStatus: VendorRegistrationStatus.NOT_APPLIED,
+    });
+    return user
   }
 }

@@ -1,12 +1,18 @@
-import { Operations } from "@/libs/enums/common";
-import { ApiRequest, ApiResponse, IHandler } from "@/libs/types/common";
-import { OtpApiHandlerRequest, OtpHandlerActions } from "./types";
-import { SmsClient } from "@/libs/services/sms/service";
-import { BadRequestExecption } from "@/libs/error/error";
 import { HTTP_RESOURCES } from "@/libs/constants/resources";
+import { Operations } from "@/libs/enums/common";
+import { BadRequestExecption } from "@/libs/error/error";
+import { OrganizationService } from "@/libs/services/organization/service";
+import { SmsClient } from "@/libs/services/sms/service";
 import { OTP_RESPONSE_CODES } from "@/libs/services/sms/utils";
 import { UserService } from "@/libs/services/user/service";
-import { OrganizationService } from "@/libs/services/organization/service";
+import {
+  ApiRequest,
+  ApiResponse,
+  DeviceType,
+  IHandler
+} from "@/libs/types/common";
+import { OtpApiHandlerRequest, OtpHandlerActions } from "./types";
+import { otpPostApiSchema } from "./validation";
 
 export class OtpApiHandler implements IHandler {
   operation: Operations;
@@ -32,9 +38,11 @@ export class OtpApiHandler implements IHandler {
   }
 
   async handler(req: ApiRequest<OtpApiHandlerRequest>, res: ApiResponse, next) {
-    const action = req.body.action;
-    const phoneNumber = req.body.phoneNumber;
     try {
+      const body = otpPostApiSchema.parse(req.body);
+      const action = body.action;
+      const phoneNumber = body.phoneNumber;
+
       if (!action) {
         throw new BadRequestExecption("Action is required");
       }
@@ -45,31 +53,47 @@ export class OtpApiHandler implements IHandler {
 
       switch (action) {
         case OtpHandlerActions.SEND_OTP: {
-          const user = await this.userService.getVendorUser({ phoneNumber });
-          if (!user) {
-            throw new BadRequestExecption("User is not registered as a vendor");
+          let user = await this.userService.getUserByPhoneNumber({
+            phoneNumber,
+          });
+
+          // Need to extract deviceType from request
+          if (!user && !body.deviceType) {
+            throw new BadRequestExecption("User not found");
           }
+
           const result = await this.smsClient.initOtpVerification({
             to: phoneNumber,
           });
-          return res.status(200).send(result);
+
+          return res.status(200).send({
+            smsResponse: result,
+            isExisting: !!user,
+            user,
+          });
         }
 
         case OtpHandlerActions.VERIFY_OTP: {
-          const code = req.body.code;
-          if (!code) {
-            throw new BadRequestExecption(
-              "Otp Code is required for verification"
-            );
-          }
+          const code = body.code;
+
           const result = await this.smsClient.verifyOtp({
             code,
             phoneNumber,
             generateToken: true,
           });
+
           if (result.status === OTP_RESPONSE_CODES.INVALID_OTP_CODE) {
             throw new BadRequestExecption("Invalid OTP code");
           }
+
+          if(body.deviceType === DeviceType.Web && body.isNewUser){
+             await this.userService.createCustomerUser({
+              phoneNumber,
+              name: body.name,
+              scannedVendorId: body.scannedVendorId,
+            })
+          }
+          
           const orgInfo = await this.organizationService.getOrganizationInfo();
           result.wsUrl = orgInfo.wsUrl;
           return res.status(200).send(result);

@@ -1,7 +1,18 @@
+import { ZodError } from "zod";
 import { Exceptions } from "../enums/errors";
 
 export const errorHandler = (err, req, res, next) => {
-    console.log("Error", err)
-    res.status(err.statusCode ? err.statusCode : 500).send({ message: err.message || Exceptions.UNKNOWN_HANDLED_ERROR });
+  let statusCode;
+  let message;
+  if (err.statusCode) {
+    statusCode = err.statusCode;
+    message = err.message;
+  } else if (err instanceof ZodError) {
+    statusCode = 400;
+    message = err.errors;
+  } else {
+    statusCode = 500;
+    message = Exceptions.UNKNOWN_HANDLED_ERROR;
+  }
+  res.status(statusCode).send({ message });
 };
-

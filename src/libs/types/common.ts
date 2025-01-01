@@ -18,5 +18,11 @@ export interface ApiRequestTypes {
     query?: any;
 }
 
+
+export enum DeviceType {
+    Web = "web",
+    Mobile = "mobile",
+}
+
 export type ApiRequest<T extends ApiRequestTypes = {}> = { userInfo: User } & Request<T['params'], any, T['body'], T['query']>
 export type ApiResponse = Response
