@@ -17,7 +17,7 @@ export class GetFaqsHandler implements IHandler {
         this.operationId = "GET_FAQS";
         this.resource = "faqs";
         this.validations = [];
-        this.isAuthorizedAccess = true;
+        this.isAuthorizedAccess = false;
         this.handler = this.handler.bind(this);
     }
     
