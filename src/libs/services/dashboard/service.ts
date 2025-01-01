@@ -1,3 +1,4 @@
+import { ApplicationsService } from "../applications/service";
 import { ApplicationStatus, VendorCreditStatus } from "../mongo/enums";
 import {
   Applications,
@@ -9,13 +10,16 @@ import {
 import { VendorCreditsType } from "../mongo/types";
 import { QueryBuilderService } from "../queryBuilder/service";
 import { UserService } from "../user/service";
+import { TableQueryIds } from "./utils";
 
 export class DashboardService {
   private readonly queryBuilder: QueryBuilderService;
   private readonly userService: UserService;
+  private readonly applicationService: ApplicationsService;
   constructor() {
     this.queryBuilder = new QueryBuilderService();
     this.userService = new UserService();
+    this.applicationService = new ApplicationsService();
     this.getCardData = this.getCardData.bind(this);
     this.getTableData = this.getTableData.bind(this);
     this.getCreditsBilled = this.getCreditsBilled.bind(this);
@@ -57,7 +61,7 @@ export class DashboardService {
           count: approvedCount,
         },
         billed: {
-          value: creditsBilled,
+          count: creditsBilled,
         },
         invoices: {
           count: totalInvoices,
@@ -130,29 +134,47 @@ export class DashboardService {
     query: Record<string, any>;
   }) {
     try {
-      const { phoneNumber, ...scanQuery } = query;
       switch (queryId) {
-        case "scans":
-          const { phoneNumber, ...scanQuery } = query;
-          return await Scans.find(scanQuery);
-        case "applications":
-          return await Applications.find(query);
-        case "billed":
+        case TableQueryIds.SCANS:
+          return await this.getScannedUsers({ vendorId: query.vendorId });
+        case TableQueryIds.APPROVED:
+          return await this.applicationService.queryApplications({
+            query: {
+              status: ApplicationStatus.APPROVED,
+              vendorId: query.vendorId,
+            },
+          });
+        case TableQueryIds.LOGINS: {
+          return await this.applicationService.queryApplications({
+            query: {
+              status: ApplicationStatus.LOGIN,
+              vendorId: query.vendorId,
+            },
+          });
+        }
+        case TableQueryIds.BILLED:
           return await VendorCredits.find({
-            ...query,
+            vendorId: query.vendorId,
             status: VendorCreditStatus.TO_BE_RAISED,
           });
-        case "users":
+        case TableQueryIds.USERS:
           const filteredUsers = await Users.find({
             vendorId: query.vendorId,
             phoneNumber: { $ne: query.phoneNumber },
           });
           return filteredUsers;
+        case TableQueryIds.INVOICES: {
+          return await Invoices.find({ vendorId: query.vendorId });
+        }
         default:
           throw new Error("Invalid query id");
       }
     } catch (error) {
       throw error;
     }
+  }
+
+  async getScannedUsers({ vendorId }: { vendorId: string }) {
+    return await Scans.find({ vendorId });
   }
 }

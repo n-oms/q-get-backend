@@ -36,11 +36,12 @@ export class InvoiceApiPostHandler implements IHandler {
       if (!action) {
         throw new BadRequestExecption("Action is required");
       }
+      const userInfo = req.userInfo
       let result;
       switch (action) {
         case InvoiceApiActionType.RAISE_INVOICE:
           result = await this.billingService.pushRaiseInvoiceEvent({
-            vendorId: req.body.data.vendorId,
+            vendorId: userInfo.vendorId,
           });
       }
       return res.status(200).send(result);
