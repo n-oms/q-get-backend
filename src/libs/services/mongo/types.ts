@@ -162,3 +162,9 @@ export type EnquiryRequest = {
   enquiryServiceType: EnquiryServiceType;
   lastSentAt: number;
 };
+
+export type WelcomeMessageTracker = {
+  phoneNumber: string;
+  service: string;
+  lastSentAt: number;
+};

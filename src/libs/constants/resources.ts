@@ -18,4 +18,5 @@ export const HTTP_RESOURCES = {
   ORGANIZATION: {
     GET_ORG_INFO: "getOrgInfo",
   },
+  WELCOME_MESSAGE: "welcomeMessage",
 };
