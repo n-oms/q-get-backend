@@ -15,4 +15,7 @@ export const HTTP_RESOURCES = {
   GET_UPLOAD_URL: "getUploadUrl",
   MOBILE_VERSION: "mobileVersion",
   ENQUIRY: "enquiry",
+  ORGANIZATION: {
+    GET_ORG_INFO: "getOrgInfo",
+  },
 };

@@ -6,6 +6,8 @@ import { ApiRequest, ApiResponse, IHandler } from "@/libs/types/common";
 import { DashboardQueryTypes, GetDashboardData } from "../../types";
 import { UserType } from "@/libs/services/mongo/enums";
 import { OPERATION_IDS } from "@/libs/constants/operation-ids";
+import { dashboardApiBodySchema } from "./validations";
+import { NextFunction } from "express";
 
 export class GetDashboardDataHandler implements IHandler {
   operation: Operations;
@@ -16,7 +18,7 @@ export class GetDashboardDataHandler implements IHandler {
   dashboardService: DashboardService;
   isAuthorizedAccess?: boolean;
   constructor() {
-    this.operation = Operations.READ;
+    this.operation = Operations.INVOKE;
     this.isIdempotent = false;
     this.isAuthorizedAccess = true;
     this.operationId = OPERATION_IDS.VENDOR_DASHBOARD.GET_OTP;
@@ -26,7 +28,7 @@ export class GetDashboardDataHandler implements IHandler {
     this.handler = this.handler.bind(this);
   }
 
-  async handler(req: ApiRequest<GetDashboardData>, res: ApiResponse, next) {
+  async handler(req: ApiRequest, res: ApiResponse, next: NextFunction) {
     try {
       const { userType, vendorId, phoneNumber } = req.userInfo;
 
@@ -34,15 +36,14 @@ export class GetDashboardDataHandler implements IHandler {
         throw new BadRequestExecption("User is not vendor");
       }
 
-      const type = req.query.queryType;
+      const body = dashboardApiBodySchema.parse(req.body);
+      const action = body.action;
 
-      delete req.query.queryType;
-
-      if (!type) {
+      if (!action) {
         throw new NotProvidedError("Query type not provided");
       }
 
-      switch (type) {
+      switch (action) {
         case DashboardQueryTypes.GET_CARD_DATA: {
           const result = await this.dashboardService.getCardData({
             vendorId,
@@ -51,17 +52,17 @@ export class GetDashboardDataHandler implements IHandler {
           return res.status(200).send(result);
         }
         case DashboardQueryTypes.GET_TABLE_DATA: {
-          const { queryId } = req.query;
+          const { queryId } = body.query
 
           if (!queryId) {
             throw new NotProvidedError("Query id not provided");
           }
 
           // delete queryId from query to avoid passing it to the db query
-          delete req.query.queryId;
+          delete body.query.queryId
 
           const result = await this.dashboardService.getTableData({
-            query: { vendorId, ...req.query },
+            query: { vendorId, ...body.query },
             queryId,
           });
           return res.status(200).send(result);

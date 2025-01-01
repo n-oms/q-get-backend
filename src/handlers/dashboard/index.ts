@@ -1,1 +1,1 @@
-export * from "./vendors/get/handler";
+export * from "./vendors/post/handler";

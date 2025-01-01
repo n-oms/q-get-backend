@@ -37,7 +37,7 @@ export class BillingService {
     const invoiceId = this.createInvoiceId({ vendorId: input.vendorId });
     // Attaching invoice request ids to credits
     await this.vendorCreditService.attachInvoiceRequestIdsToCredits({
-      toBeRaisedCreditIds: creditsToBeRaised.map((credit) => credit.creditId),
+      toBeRaisedCreditIds: creditsToBeRaised.map((credit) => credit.creditId || credit._id.toString()),
       invoiceReqId: invoiceId,
     });
 

@@ -20,7 +20,7 @@ export class VendorCreditService {
       async (creditId) => {
         const updateResponse = await VendorCredits.updateOne(
           {
-            creditId,
+            _id: creditId,
           },
           {
             invoiceReqId: input.invoiceReqId,

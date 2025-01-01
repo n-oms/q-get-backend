@@ -20,6 +20,7 @@ import { GetFaqsHandler } from "@/handlers/faqs/get/handler";
 import { BlogsPostHandler, GetBlogsHandler } from "@/handlers/blogs";
 import { GetUploadUrlHandler } from "@/handlers/getUploadUrl";
 import { EnquiryHandler } from "@/handlers/enquiry";
+import { GetOrgInfoHandler } from "@/handlers/organization";
 
 const MAP_KEY_PAIR = [
   [Operations.CREATE, HTTP_METHODS.POST],
@@ -67,5 +68,6 @@ function getAllRouteHandlers(): Array<IHandler> {
   routeHandlers.push(new BlogsPostHandler());
   routeHandlers.push(new GetUploadUrlHandler());
   routeHandlers.push(new EnquiryHandler());
+  routeHandlers.push(new GetOrgInfoHandler());
   return routeHandlers;
 }
