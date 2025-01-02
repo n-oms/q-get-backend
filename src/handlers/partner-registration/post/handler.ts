@@ -77,9 +77,9 @@ export class PartnerRegistartionPostApiHandler implements IHandler {
                 const user = await this.userService.updateUser({
                   phoneNumber,
                   updateData: {
-                    userType: UserType.Vendor,
+                    userType: UserType.Customer,
                     vendorRegistrationStatus: VendorRegistrationStatus.PENDING,
-                    vendorId: existingUser.vendorId,
+                    vendorId: existingUser.vendorId || "",
                     isVendorRegistrationRequestSent: true,
                     status: UserStatus.VENDOR_NOT_APPROVED,
                     vendorInfo: body.data,
