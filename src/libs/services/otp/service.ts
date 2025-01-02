@@ -1,9 +1,7 @@
 import { Otps } from "../mongo/schema";
 import { Otp } from "../mongo/types";
 
-
 export class OtpDBService {
-
   constructor() {
     this.getOtpEntry = this.getOtpEntry.bind(this);
     this.createOtpEntry = this.createOtpEntry.bind(this);
@@ -13,7 +11,7 @@ export class OtpDBService {
   async getOtpEntry(phone: string) {
     try {
       const otp = await Otps.findOne({ phoneNumber: phone });
-      return otp?.toJSON();
+      return otp ? otp?.toJSON() : null;
     } catch (error) {
       throw error;
     }
@@ -46,7 +44,7 @@ export class OtpDBService {
       const otp = await Otps.findOneAndUpdate(
         { phoneNumber },
         { ...input },
-        { new: true },
+        { new: true }
       );
       return otp?.toJSON();
     } catch (error) {

@@ -58,8 +58,8 @@ export class OtpApiHandler implements IHandler {
           });
 
           // Need to extract deviceType from request
-          if (!user && !body.deviceType) {
-            throw new BadRequestExecption("User not found");
+          if ( !body.deviceType) {
+            throw new BadRequestExecption("Device Type not found");
           }
 
           const result = await this.smsClient.initOtpVerification({
