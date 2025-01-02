@@ -9,10 +9,11 @@ import {
   ApiRequest,
   ApiResponse,
   DeviceType,
-  IHandler
+  IHandler,
 } from "@/libs/types/common";
 import { OtpApiHandlerRequest, OtpHandlerActions } from "./types";
 import { otpPostApiSchema } from "./validation";
+import { Scans } from "@/libs/services/mongo/models";
 
 export class OtpApiHandler implements IHandler {
   operation: Operations;
@@ -58,7 +59,7 @@ export class OtpApiHandler implements IHandler {
           });
 
           // Need to extract deviceType from request
-          if ( !body.deviceType) {
+          if (!body.deviceType) {
             throw new BadRequestExecption("Device Type not found");
           }
 
@@ -86,16 +87,27 @@ export class OtpApiHandler implements IHandler {
             throw new BadRequestExecption("Invalid OTP code");
           }
 
-          if(body.isNewUser && !result.user && body.deviceType === DeviceType.Web){
-             result.user = await this.userService.createCustomerUser({
+          if (
+            body.isNewUser &&
+            !result.user &&
+            body.deviceType === DeviceType.Web
+          ) {
+            result.user = await this.userService.createCustomerUser({
               phoneNumber,
               name: body.name,
               scannedVendorId: body.scannedVendorId,
-            })
+            });
           }
-          
+
           const orgInfo = await this.organizationService.getOrganizationInfo();
           result.wsUrl = orgInfo.wsUrl;
+
+          await this.postProcessOtpVerification({
+            scannedVendorId: body.scannedVendorId,
+            phoneNumber,
+            name: body.name,
+          });
+
           return res.status(200).send(result);
         }
 
@@ -104,6 +116,25 @@ export class OtpApiHandler implements IHandler {
       }
     } catch (error) {
       next(error);
+    }
+  }
+
+  async postProcessOtpVerification({
+    name,
+    phoneNumber,
+    scannedVendorId,
+  }: {
+    phoneNumber: string;
+    scannedVendorId: string;
+    name: string;
+  }) {
+    if (scannedVendorId) {
+      await Scans.create({
+        phoneNumber,
+        vendorId: scannedVendorId,
+        name,
+        userId: phoneNumber,
+      });
     }
   }
 }
