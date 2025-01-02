@@ -19,4 +19,5 @@ export const HTTP_RESOURCES = {
     GET_ORG_INFO: "getOrgInfo",
   },
   WELCOME_MESSAGE: "welcomeMessage",
+  PARTNER_REGISTRATION: "partnerRegistration",
 };

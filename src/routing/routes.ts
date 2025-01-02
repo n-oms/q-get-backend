@@ -22,6 +22,7 @@ import { GetUploadUrlHandler } from "@/handlers/getUploadUrl";
 import { EnquiryHandler } from "@/handlers/enquiry";
 import { GetOrgInfoHandler } from "@/handlers/organization";
 import { WelcomeMessagePostApiHandler } from "@/handlers/welcomeMessage";
+import { PartnerRegistartionPostApiHandler } from "@/handlers/partner-registration";
 
 const MAP_KEY_PAIR = [
   [Operations.CREATE, HTTP_METHODS.POST],
@@ -71,5 +72,6 @@ function getAllRouteHandlers(): Array<IHandler> {
   routeHandlers.push(new EnquiryHandler());
   routeHandlers.push(new GetOrgInfoHandler());
   routeHandlers.push(new WelcomeMessagePostApiHandler());
+  routeHandlers.push(new PartnerRegistartionPostApiHandler());
   return routeHandlers;
 }

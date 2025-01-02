@@ -1,7 +1,6 @@
 import { SendMessageCommand, SQS } from "@aws-sdk/client-sqs";
-import { QueuePayload, SendMessageInput } from "./types";
-import { AWS_CONFIG } from "@/libs/constants/common";
 import { AwsService } from "../aws/service";
+import { QueuePayload } from "./types";
 
 export class SqsService {
   private readonly sqs: SQS;
@@ -23,7 +22,7 @@ export class SqsService {
         QueueUrl: queueUrl,
         MessageBody: JSON.stringify(message),
       });
-      return this.sqs.send(command);
+      return await this.sqs.send(command);
     } catch (error) {
       console.log(error);
       throw error;

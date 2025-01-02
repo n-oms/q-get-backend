@@ -1,12 +1,25 @@
+import { ClassUtils } from "@/libs/utils/classUtils";
 import { UserStatus, UserType, VendorRegistrationStatus } from "../mongo/enums";
 import { Users } from "../mongo/schema";
+import { User } from "../mongo/types";
+import { OrganizationService } from "../organization/service";
+import { SqsService } from "../sqs/service";
+import { SQS_QUEUES } from "@/libs/constants/sqs";
 
 export class UserService {
+  private readonly organizationService: OrganizationService;
+  private readonly sqsService: SqsService;
+
+  constructor() {
+    this.organizationService = new OrganizationService();
+    this.sqsService = new SqsService();
+    ClassUtils.bindMethods(this);
+  }
+
   async getUserByPhoneNumber({ phoneNumber }: { phoneNumber: string }) {
     const result = await Users.findOne({ phoneNumber });
     return result ? result.toJSON() : null;
   }
-
 
   async getUsersByVendorId({ vendorId }: { vendorId: string }) {
     const result = await Users.find({ vendorId });
@@ -18,7 +31,7 @@ export class UserService {
       phoneNumber,
       userType: UserType.Vendor,
     });
-    return result;
+    return result ? result.toJSON() : null;
   }
 
   async getUserCountByVendorId({
@@ -54,6 +67,42 @@ export class UserService {
       scannedVendorId,
       vendorRegistrationStatus: VendorRegistrationStatus.NOT_APPLIED,
     });
-    return user
+    return user;
+  }
+
+  async updateUser({
+    phoneNumber,
+    updateData,
+  }: {
+    phoneNumber: string;
+    updateData: Partial<User>;
+  }) {
+    const user = await Users.findOneAndUpdate(
+      { phoneNumber },
+      { ...updateData },
+      { new: true }
+    );
+    return user ? user.toJSON() : null;
+  }
+
+  async sendVendorRegistrationRequest({ vendorInfo }: { vendorInfo: any }) {
+    const orgInfo = await this.organizationService.getOrganizationInfo();
+
+    const message = {
+      eventId: "vendor-generic-event",
+      subEvent: "vendor-registration-request",
+      tenantId: orgInfo.tenantId,
+      vendorId: "",
+      eventDetails: {
+        ...vendorInfo,
+        phoneNumber: vendorInfo.phoneNumber,
+        name: vendorInfo.name,
+      },
+    };
+    const response = await this.sqsService.sendMessage({
+      message,
+      queueUrl: SQS_QUEUES.RAISE_INVOICE_REQUEST_QUEUE.url,
+    });
+    return response
   }
 }
