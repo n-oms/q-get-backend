@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema<User>(
     id: String,
     name: String,
     email: String,
+    scannedVendorId: String,
     vendorId: {
       type: String,
       required: false,
