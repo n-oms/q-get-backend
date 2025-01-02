@@ -184,7 +184,8 @@ export class SmsClient {
 
     // Getting the verified user info from the database
     const user = await Users.findOne({ phoneNumber })
-    resultObj.user = user.toJSON()
+   
+    resultObj.user = user ? user.toJSON() : null
     
     if (generateToken) {
       const token = await this.jwtService.createUserToken({ phoneNumber })

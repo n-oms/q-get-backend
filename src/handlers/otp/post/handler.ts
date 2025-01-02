@@ -86,8 +86,8 @@ export class OtpApiHandler implements IHandler {
             throw new BadRequestExecption("Invalid OTP code");
           }
 
-          if(body.deviceType === DeviceType.Web && body.isNewUser){
-             await this.userService.createCustomerUser({
+          if(body.isNewUser && !result.user && body.deviceType === DeviceType.Web){
+             result.user = await this.userService.createCustomerUser({
               phoneNumber,
               name: body.name,
               scannedVendorId: body.scannedVendorId,
