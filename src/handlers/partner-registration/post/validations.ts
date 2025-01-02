@@ -8,7 +8,5 @@ export enum PartnerRegistrationHandlerActions {
 
 export const partnerRegistartionPostApiHandler = z.object({
     action: z.nativeEnum(PartnerRegistrationHandlerActions),
-    data: z.object({
-        phoneNumber: z.string(),
-    })
+    data: z.any(),
 })
