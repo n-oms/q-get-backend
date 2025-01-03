@@ -14,6 +14,7 @@ import {
 import { OtpApiHandlerRequest, OtpHandlerActions } from "./types";
 import { otpPostApiSchema } from "./validation";
 import { Scans } from "@/libs/services/mongo/models";
+import { UserType } from "@/libs/services/mongo/enums";
 
 export class OtpApiHandler implements IHandler {
   operation: Operations;
@@ -59,8 +60,8 @@ export class OtpApiHandler implements IHandler {
           });
 
           // Need to extract deviceType from request
-          if (!body.deviceType) {
-            throw new BadRequestExecption("Device Type not found");
+          if ((!user || user.userType !== UserType.Vendor) && !body.deviceType) {
+            throw new BadRequestExecption("User not found");
           }
 
           const result = await this.smsClient.initOtpVerification({

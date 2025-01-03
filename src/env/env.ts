@@ -1,4 +1,3 @@
-import { S3 } from "@aws-sdk/client-s3";
 
 export const env = {
     SMS_API_KEY: process.env.SMS_API_KEY,

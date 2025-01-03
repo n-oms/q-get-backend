@@ -1,17 +1,17 @@
 import { HTTP_RESOURCES } from "@/libs/constants/resources";
 import { Operations } from "@/libs/enums/common";
+import { BadRequestExecption } from "@/libs/error/error";
+import { WelcomeMessageTracker } from "@/libs/services/mongo/models/welcomeMessageTracker";
 import { SmsClient } from "@/libs/services/sms/service";
+import { WELCOME_MESSAGE_EXPIRATION_TIME } from "@/libs/services/sms/utils";
 import { ApiRequest, IHandler } from "@/libs/types/common";
 import { ClassUtils } from "@/libs/utils/classUtils";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import {
   WelcomeMessageAllowedServices,
   welcomeMessageApiSchema,
   WelcomeMessageTrackerApiActions,
 } from "./validation";
-import { WelcomeMessageTracker } from "@/libs/services/mongo/models/welcomeMessageTracker";
-import { BadRequestExecption } from "@/libs/error/error";
-import { WELCOME_MESSAGE_EXPIRATION_TIME } from "@/libs/services/sms/utils";
 
 export class WelcomeMessagePostApiHandler implements IHandler {
   operation: Operations;
@@ -35,7 +35,7 @@ export class WelcomeMessagePostApiHandler implements IHandler {
 
   async handler(req: ApiRequest, res: Response, next: NextFunction) {
     try {
-      const { phoneNumber } = req.userInfo;
+      const { phoneNumber } = req.userInfo
       const body = welcomeMessageApiSchema.parse(req.body);
       let result;
       switch (body.action) {
@@ -66,6 +66,7 @@ export class WelcomeMessagePostApiHandler implements IHandler {
   }) {
     const welcomeMessageEntry = await WelcomeMessageTracker.findOne({
       phoneNumber,
+      service
     });
     if (!welcomeMessageEntry) {
       const smsResponse = await this.smsClient.sendWelcomeMessage({

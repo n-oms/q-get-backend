@@ -39,7 +39,9 @@ export class SmsClient {
   }
 
   async send(input: RequestInfo | URL) {
-    return await fetch(input);
+    const res = await fetch(input);
+    const data = await res.json();
+    return data;
   }
 
   static getClient() {
@@ -58,7 +60,6 @@ export class SmsClient {
       messageType: MessageType.WelcomeMessage,
       templateId,
     });
-
     return await this.send(url);
   }
 
