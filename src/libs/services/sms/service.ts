@@ -39,9 +39,7 @@ export class SmsClient {
   }
 
   async send(input: RequestInfo | URL) {
-    const res = await fetch(input);
-    const data = await res.json();
-    return data;
+    return await fetch(input)
   }
 
   static getClient() {
