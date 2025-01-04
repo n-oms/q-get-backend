@@ -15,6 +15,11 @@ import { OtpApiHandlerRequest, OtpHandlerActions } from "./types";
 import { otpPostApiSchema } from "./validation";
 import { Scans } from "@/libs/services/mongo/models";
 import { UserType } from "@/libs/services/mongo/enums";
+import {
+  GOOGLE_PLAY_TEST_AUTH_NUMBER,
+  GOOGLE_PLAY_TEST_AUTH_OTP,
+  GooglePlayService,
+} from "@/libs/services/google-play/service";
 
 export class OtpApiHandler implements IHandler {
   operation: Operations;
@@ -26,6 +31,7 @@ export class OtpApiHandler implements IHandler {
   isAuthorizedAccess?: boolean;
   private readonly userService: UserService;
   private readonly organizationService: OrganizationService;
+  private readonly googlePlayService: GooglePlayService;
   constructor() {
     this.operation = Operations.CREATE;
     this.isIdempotent = false;
@@ -37,6 +43,7 @@ export class OtpApiHandler implements IHandler {
     this.handler = this.handler.bind(this);
     this.userService = new UserService();
     this.organizationService = new OrganizationService();
+    this.googlePlayService = new GooglePlayService();
   }
 
   async handler(req: ApiRequest<OtpApiHandlerRequest>, res: ApiResponse, next) {
@@ -55,12 +62,23 @@ export class OtpApiHandler implements IHandler {
 
       switch (action) {
         case OtpHandlerActions.SEND_OTP: {
+          if (phoneNumber === GOOGLE_PLAY_TEST_AUTH_NUMBER) {
+            return res.status(200).send({
+              smsResponse: { status: "success" },
+              isExisting: true,
+              user: null,
+            });
+          }
+
           let user = await this.userService.getUserByPhoneNumber({
             phoneNumber,
           });
 
           // Need to extract deviceType from request
-          if ((!user || user.userType !== UserType.Vendor) && !body.deviceType) {
+          if (
+            (!user || user.userType !== UserType.Vendor) &&
+            !body.deviceType
+          ) {
             throw new BadRequestExecption("User not found");
           }
 
@@ -77,6 +95,15 @@ export class OtpApiHandler implements IHandler {
 
         case OtpHandlerActions.VERIFY_OTP: {
           const code = body.code;
+
+          if (
+            body.phoneNumber === GOOGLE_PLAY_TEST_AUTH_NUMBER &&
+            code === GOOGLE_PLAY_TEST_AUTH_OTP
+          ) {
+            const testAccountDetails =
+              await this.googlePlayService.getTestAccountDetails();
+            return res.status(200).send(testAccountDetails);
+          }
 
           const result = await this.smsClient.verifyOtp({
             code,
