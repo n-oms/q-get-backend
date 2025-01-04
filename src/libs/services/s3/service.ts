@@ -5,7 +5,7 @@ import { AwsService } from "../aws/service";
 export class S3Service {
   private readonly s3Client: S3;
   constructor() {
-    this.s3Client = AwsService.getS3Client({ region: "us-west-1" });
+    this.s3Client = AwsService.getS3Client({ region: "us-east-1" });
   }
 
   async getPresignedUploadUrl({
