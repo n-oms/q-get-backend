@@ -36,11 +36,12 @@ export class EnquiryHandler implements IHandler {
       const userInfo = req.userInfo;
 
       // const body = sendEnquiryBodySchema.parse(req.body);
-      const body = req.body as any
+      const body = req.body as any;
       const result = await this.enquiryService.sendEnquiry({
         enquiryServiceType: body.enquiryServiceType,
         userInfo,
         data: body,
+        enquiryTrigger: body.enquiryTrigger,
       });
 
       return res.status(200).json(result);

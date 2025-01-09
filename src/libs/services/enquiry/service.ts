@@ -1,4 +1,4 @@
-import { EnquiryServiceType } from "@/libs/constants/common";
+import { EnquiryServiceType, EnquiryTrigger } from "@/libs/constants/common";
 import { SQS_QUEUES } from "@/libs/constants/sqs";
 import { ClassUtils } from "@/libs/utils/classUtils";
 import { EnquiryModel } from "../mongo/models/enquiry";
@@ -22,15 +22,23 @@ export class EnquiryService {
     enquiryServiceType,
     userInfo,
     data,
+    enquiryTrigger,
   }: {
     userInfo: User;
     enquiryServiceType: EnquiryServiceType;
     data?: Record<string, unknown>;
+    enquiryTrigger: EnquiryTrigger;
   }) {
-    const isLastEnquiryExpired = await this.isLastEquiryExpired({
-      enquiryServiceType,
-      phoneNumber: userInfo.id || userInfo.phoneNumber,
-    });
+    console.log(data);
+
+    let isLastEnquiryExpired = true;
+
+    if (enquiryTrigger === EnquiryTrigger.AUTOMATIC) {
+      isLastEnquiryExpired = await this.isLastEquiryExpired({
+        enquiryServiceType,
+        phoneNumber: userInfo.id || userInfo.phoneNumber,
+      });
+    }
 
     if (!isLastEnquiryExpired) {
       return;
@@ -146,7 +154,7 @@ export class EnquiryService {
     }
 
     const currentTime = Date.now();
-    return currentTime - lastSentAt > ENQUIRY_REQUEST_EXPIRATION_TIME;
+    return currentTime - lastSentAt >= ENQUIRY_REQUEST_EXPIRATION_TIME;
   }
 
   async getEnquiryEntry({
