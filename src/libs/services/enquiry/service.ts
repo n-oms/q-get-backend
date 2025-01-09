@@ -36,6 +36,7 @@ export class EnquiryService {
       return;
     }
 
+    // Need to discuss with the team about the message data
     const messageData = this.getServiceSpecificMessageData({
       serviceType: enquiryServiceType,
       data,
@@ -44,7 +45,7 @@ export class EnquiryService {
     const sqsPayload = await this.getSqsMessagePayload({
       userInfo,
       enquiryServiceType,
-      data: messageData,
+      data,
     });
 
     const sqsResponse = await this.sqsService.sendMessage({
