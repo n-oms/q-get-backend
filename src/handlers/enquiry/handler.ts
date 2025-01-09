@@ -35,15 +35,13 @@ export class EnquiryHandler implements IHandler {
     try {
       const userInfo = req.userInfo;
 
-      const body = sendEnquiryBodySchema.parse(req.body);
-
+      // const body = sendEnquiryBodySchema.parse(req.body);
+      const body = req.body as any
       const result = await this.enquiryService.sendEnquiry({
         enquiryServiceType: body.enquiryServiceType,
         userInfo,
         data: body,
       });
-
-
 
       return res.status(200).json(result);
     } catch (error) {
