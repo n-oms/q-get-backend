@@ -218,7 +218,7 @@ export class LeadService {
       console.log("createLead - Login successful! Response is:",loginResponse);
 
       const requestData = {
-        ...leadData,
+        data: leadData,
         action: "LG-Create-Lead",
         type: "SPRINT_Partner",
       };
