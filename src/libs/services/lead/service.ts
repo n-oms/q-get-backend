@@ -192,7 +192,7 @@ export class LeadService {
         ivHex
       );
       const responseJson = JSON.parse(decrypted);
-      console.log("login - Response decryption successful");
+      console.log("login - Response decryption successful. Response JSON is :",responseJson);
       console.log("login - Response :",{
         token: responseJson.access_token,
         xSbicUserFgp: responseJson["x-sbic-user-fgp"],
