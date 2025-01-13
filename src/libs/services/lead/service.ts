@@ -194,13 +194,13 @@ export class LeadService {
       const responseJson = JSON.parse(decrypted);
       console.log("login - Response decryption successful. Response JSON is :",responseJson.data);
       console.log("login - Response :",{
-        token: responseJson.data.access_token,
-        xSbicUserFgp: responseJson.data["x-sbic-user-fgp"],
+        token: responseJson.data.accessToken,
+        xSbicUserFgp: responseJson.data.xSbicUserFgp
       });
 
       return {
-        token: responseJson.data.access_token,
-        xSbicUserFgp: responseJson.data["x-sbic-user-fgp"],
+        token: responseJson.data.accessToken,
+        xSbicUserFgp: responseJson.data.xSbicUserFgp
       };
     } catch (error) {
       console.error("login - Login process failed:", error);
