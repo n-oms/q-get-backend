@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "npx tsc && tsc-alias -p tsconfig.json",
+    "build": "tsc && tsc-alias -p tsconfig.json && node -e \"require('fs').copyFileSync('sprint.pem', 'bin/handlers/sbi-lead/sprint.pem')\"",
     "dev": "ts-node -r tsconfig-paths/register -r dotenv/config src/index.ts",
     "start": "tsc && tsc-alias -p tsconfig.json && node -r dotenv/config bin/index.js",
     "sync": "git pull origin main"
