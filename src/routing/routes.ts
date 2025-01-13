@@ -24,6 +24,7 @@ import { GetOrgInfoHandler } from "@/handlers/organization";
 import { WelcomeMessagePostApiHandler } from "@/handlers/welcomeMessage";
 import { PartnerRegistartionPostApiHandler } from "@/handlers/partner-registration";
 import { GetInsightsHandler } from "@/handlers/insights";
+import { CreateLeadHandler } from "@/handlers/sbi-lead/handler";
 
 const MAP_KEY_PAIR = [
   [Operations.CREATE, HTTP_METHODS.POST],
@@ -75,5 +76,6 @@ function getAllRouteHandlers(): Array<IHandler> {
   routeHandlers.push(new WelcomeMessagePostApiHandler());
   routeHandlers.push(new PartnerRegistartionPostApiHandler());
   routeHandlers.push(new GetInsightsHandler());
+  routeHandlers.push(new CreateLeadHandler());
   return routeHandlers;
 }
