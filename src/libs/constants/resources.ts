@@ -21,4 +21,5 @@ export const HTTP_RESOURCES = {
   WELCOME_MESSAGE: "welcomeMessage",
   PARTNER_REGISTRATION: "partnerRegistration",
   INSIGHTS: "insights",
+  CREATE_LEAD:"sbi-lead"
 };
