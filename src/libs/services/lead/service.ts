@@ -192,15 +192,15 @@ export class LeadService {
         ivHex
       );
       const responseJson = JSON.parse(decrypted);
-      console.log("login - Response decryption successful. Response JSON is :",responseJson);
+      console.log("login - Response decryption successful. Response JSON is :",responseJson.data);
       console.log("login - Response :",{
-        token: responseJson.access_token,
-        xSbicUserFgp: responseJson["x-sbic-user-fgp"],
+        token: responseJson.data.access_token,
+        xSbicUserFgp: responseJson.data["x-sbic-user-fgp"],
       });
 
       return {
-        token: responseJson.access_token,
-        xSbicUserFgp: responseJson["x-sbic-user-fgp"],
+        token: responseJson.data.access_token,
+        xSbicUserFgp: responseJson.data["x-sbic-user-fgp"],
       };
     } catch (error) {
       console.error("login - Login process failed:", error);
@@ -256,19 +256,19 @@ export class LeadService {
       );
       const responseJson = JSON.parse(decrypted);
       console.log("createLead - Response decryption successful");
-      console.log("createLead - Decrypted response:", JSON.stringify(responseJson, null, 2));
+      console.log("createLead - Decrypted response:", JSON.stringify(responseJson.data, null, 2));
 
       console.log("createLead - Saving lead to MongoDB");
       const lead = await Leads.create({
         ...leadData,
-        leadID: responseJson.leadID,
-        status: responseJson.status,
+        leadID: responseJson.data.leadID,
+        status: responseJson.data.status,
       });
       console.log("createLead - Lead saved successfully with ID:", lead._id);
 
       return {
         lead,
-        apiResponse: responseJson,
+        apiResponse: responseJson.data,
       };
     } catch (error) {
       console.error("createLead - Lead creation failed:", error);
