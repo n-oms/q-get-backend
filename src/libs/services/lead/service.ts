@@ -193,6 +193,10 @@ export class LeadService {
       );
       const responseJson = JSON.parse(decrypted);
       console.log("login - Response decryption successful");
+      console.log("login - Response :",{
+        token: responseJson.access_token,
+        xSbicUserFgp: responseJson["x-sbic-user-fgp"],
+      });
 
       return {
         token: responseJson.access_token,
@@ -211,7 +215,7 @@ export class LeadService {
     try {
       console.log("createLead - Initiating login");
       const loginResponse = await this.login();
-      console.log("createLead - Login successful");
+      console.log("createLead - Login successful! Response is:",loginResponse);
 
       const requestData = {
         ...leadData,
