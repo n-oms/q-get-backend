@@ -187,7 +187,7 @@ export class LeadService {
 
       console.log("login - Decrypting response");
       const decrypted = this.AES256Util.decryptAES(
-        apiResponse.apiResponse,
+        apiResponse.encResponse,
         aesKeyBase64String,
         ivHex
       );
@@ -246,7 +246,7 @@ export class LeadService {
 
       console.log("createLead - Decrypting response");
       const decrypted = this.AES256Util.decryptAES(
-        apiResponse.apiResponse,
+        apiResponse.encResponse,
         aesKeyBase64String,
         ivHex
       );
