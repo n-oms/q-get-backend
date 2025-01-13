@@ -4,7 +4,7 @@ import { Operations } from "@/libs/enums/common";
 import { LeadService } from "@/libs/services/lead/service";
 import {
   LeadValidationType,
-  validateLead,
+//   validateLead,
 } from "@/libs/services/mongo/validations/sbi-lead";
 import { ApiRequest, ApiResponse, IHandler } from "@/libs/types/common";
 
@@ -23,7 +23,7 @@ export class CreateLeadHandler implements IHandler {
     this.isAuthorizedAccess = true;
     this.operationId = OPERATION_IDS.LEADS.CREATE_LEAD;
     this.resource = HTTP_RESOURCES.CREATE_LEAD;
-    this.validations = [validateLead];
+    this.validations = [];
     this.handler = this.handler.bind(this);
     this.leadService = new LeadService();
   }
