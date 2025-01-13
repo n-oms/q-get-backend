@@ -1,7 +1,10 @@
+
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 
-const CARD_TYPES = ["VISC", "VPTL", "PULM", "CSC1", "SSU1"] as const;
+const CARD_TYPES = ["VISC", "VPTL", "PULM", "CSC1", "USS9"] as const;
+const CHANNEL_CODES = ["OMLG", "SAPL"] as const;
+const LEAD_SOURCES = ["LG", "LG_RKPL", "LG_BankSaathi", "ENCIRCLE"] as const;
 
 export const leadValidationSchema = z
   .object({
@@ -25,23 +28,20 @@ export const leadValidationSchema = z
       .max(16, { message: "Last name cannot exceed 16 characters" })
       .regex(/^[a-zA-Z]*$/, { message: "Last name must contain only letters" }),
 
-    mobileNumber: z
-      .string()
-      .regex(/^[0-9]{10}$/, {
-        message: "Mobile number must be exactly 10 digits",
-      }),
+    mobileNumber: z.string().regex(/^[3-9][0-9]{9}$/, {
+      message: "Mobile number must be 10 digits and start with 3-9",
+    }),
 
     emailID: z
       .string()
-      .max(50, { message: "Email ID cannot exceed 50 characters" })
-      .regex(/^[A-Za-z0-9\.\@_-]*$/, {
-        message: "Email ID contains invalid characters",
-      })
-      .email({ message: "Invalid email format" }),
+      .max(40, { message: "Email ID cannot exceed 40 characters" })
+      .regex(/^[A-Za-z0-9._-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,10}$/, {
+        message: "Invalid email format",
+      }),
 
     sourceCode: z
       .string()
-      .max(15, { message: "Source code cannot exceed 15 characters" })
+      .max(10, { message: "Source code cannot exceed 10 characters" })
       .regex(/^[a-zA-Z0-9]*$/, {
         message: "Source code must contain only alphanumeric characters",
       }),
@@ -61,28 +61,45 @@ export const leadValidationSchema = z
     lgUID: z
       .string()
       .max(120, { message: "lgUID cannot exceed 120 characters" })
-      .regex(/^[a-zA-Z0-9]*$/, {
-        message: "lgUID must contain only alphanumeric characters",
+      .regex(/^[a-zA-Z0-9-]*$/, {
+        message: "lgUID must contain only alphanumeric characters and hyphens",
+      })
+      .refine((val) => val.startsWith("LG-") || val.startsWith("EN-"), {
+        message:
+          "lgUID must start with 'LG-' for LG leads or 'EN-' for Encircle leads",
       }),
 
     breCode: z
       .string()
-      .max(9, { message: "BRE code cannot exceed 9 characters" })
+      .max(10, { message: "BRE code cannot exceed 10 characters" })
       .regex(/^[0-9]*$/, { message: "BRE code must contain only numbers" })
       .optional(),
 
-    channelCode: z
+    channelCode: z.enum(CHANNEL_CODES, {
+      errorMap: () => ({
+        message:
+          "Channel code must be 'OMLG' for LG leads or 'SAPL' for Encircle leads",
+      }),
+    }),
+
+    leadSource: z.enum(LEAD_SOURCES, {
+      errorMap: () => ({ message: "Invalid lead source" }),
+    }),
+
+    gemId1: z
       .string()
-      .max(4, { message: "Channel code cannot exceed 4 characters" })
-      .regex(/^[a-zA-Z]*$/, {
-        message: "Channel code must contain only letters",
+      .max(250, { message: "GemId1 cannot exceed 250 characters" })
+      .regex(/^[a-zA-Z0-9-_]*$/, {
+        message:
+          "GemId1 must contain only alphanumeric characters, hyphens and underscores",
       }),
 
-    leadSource: z
+    gemId2: z
       .string()
-      .max(30, { message: "Lead source cannot exceed 30 characters" })
-      .regex(/^[a-zA-Z0-9]*$/, {
-        message: "Lead source must contain only alphanumeric characters",
+      .max(250, { message: "GemId2 cannot exceed 250 characters" })
+      .regex(/^[a-zA-Z0-9-_]*$/, {
+        message:
+          "GemId2 must contain only alphanumeric characters, hyphens and underscores",
       }),
 
     filler1: z.string().optional(),
@@ -91,9 +108,8 @@ export const leadValidationSchema = z
     filler4: z.string().optional(),
     filler5: z.string().optional(),
 
-    // These will be set by the service
-    action: z.string().optional(),
-    type: z.string().optional(),
+    action: z.literal("LG-Create-Lead"),
+    type: z.literal("SPRINT_Partner"),
   })
   .strict(); // Prevents additional properties not defined in the schema
 

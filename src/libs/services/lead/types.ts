@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document } from "mongoose";
 
 export interface ILead extends Document {
   firstName: string;
@@ -8,11 +8,13 @@ export interface ILead extends Document {
   emailID: string;
   sourceCode: string;
   lgAgentID?: string;
-  cardType: "VISC" | "VPTL" | "PULM" | "CSC1" | "SSU1";
+  cardType: "VISC" | "VPTL" | "PULM" | "CSC1" | "USS9";
   lgUID: string;
   breCode?: string;
-  channelCode: string;
-  leadSource: string;
+  channelCode: "OMLG" | "SAPL";
+  leadSource: "LG" | "LG_RKPL" | "LG_BankSaathi" | "ENCIRCLE";
+  gemId1: string;
+  gemId2: string;
   filler1?: string;
   filler2?: string;
   filler3?: string;
