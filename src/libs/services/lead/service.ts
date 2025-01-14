@@ -255,7 +255,7 @@ export class LeadService {
         ivHex
       );
       const responseJson = JSON.parse(decrypted);
-      console.log("createLead - Response decryption successful");
+      console.log("createLead - Response decryption successful! Response Json is:",responseJson);
       console.log("createLead - Decrypted response:", JSON.stringify(responseJson.data, null, 2));
 
       console.log("createLead - Saving lead to MongoDB");
