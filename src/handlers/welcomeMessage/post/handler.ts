@@ -68,11 +68,12 @@ export class WelcomeMessagePostApiHandler implements IHandler {
       phoneNumber,
       service
     });
-    console.log(welcomeMessageEntry)
+    console.log("Welcome message entry", JSON.stringify(welcomeMessageEntry));
     if (!welcomeMessageEntry) {
       const smsResponse = await this.smsClient.sendWelcomeMessage({
         to: phoneNumber,
       });
+      console.log("NEW SMS RESPONSE", JSON.stringify(smsResponse));
       if (smsResponse.ok) {
         return await WelcomeMessageTracker.create({
           phoneNumber,
@@ -87,6 +88,7 @@ export class WelcomeMessagePostApiHandler implements IHandler {
       const smsResponse = await this.smsClient.sendWelcomeMessage({
         to: phoneNumber,
       });
+      console.log("SMS RESPONSE", JSON.stringify(smsResponse));
       if (smsResponse.ok) {
         return await WelcomeMessageTracker.findOneAndUpdate({
           phoneNumber,
