@@ -236,7 +236,7 @@ export class LeadService {
 
       const headers = {
         Authorization: `Bearer ${loginResponse.token}`,
-        Cookie: loginResponse.xSbicUserFgp,
+        Cookie: `x-sbic-user-fgp=${loginResponse.xSbicUserFgp}`,
         IDENTIFIER_1: "Q_GET",
       };
 
