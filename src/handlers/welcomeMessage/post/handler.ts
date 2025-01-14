@@ -68,6 +68,7 @@ export class WelcomeMessagePostApiHandler implements IHandler {
       phoneNumber,
       service
     });
+    console.log("Welcome message entry", JSON.stringify(welcomeMessageEntry));
     if (!welcomeMessageEntry) {
       const smsResponse = await this.smsClient.sendWelcomeMessage({
         to: phoneNumber,

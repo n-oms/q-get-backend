@@ -43,8 +43,6 @@ export class EnquiryHandler implements IHandler {
         data: body,
       });
 
-
-
       return res.status(200).json(result);
     } catch (error) {
       next(error);
