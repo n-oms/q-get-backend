@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "npx tsc && tsc-alias -p tsconfig.json",
+    "build": "tsc && tsc-alias -p tsconfig.json && node -e \"require('fs').copyFileSync('sprint.pem', 'bin/libs/services/lead/sprint.pem')\"",
     "dev": "ts-node -r tsconfig-paths/register -r dotenv/config src/index.ts",
-    "start": "tsc && tsc-alias -p tsconfig.json && node -r dotenv/config bin/index.js"
+    "start": "tsc && tsc-alias -p tsconfig.json && node -r dotenv/config bin/index.js",
+    "sync": "git pull origin main"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
     "@aws-sdk/client-s3": "^3.717.0",
     "@aws-sdk/client-sqs": "^3.716.0",
     "@aws-sdk/s3-request-presigner": "^3.717.0",
+    "axios": "^1.7.9",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",

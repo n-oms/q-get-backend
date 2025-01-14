@@ -25,7 +25,10 @@ export const OPERATION_IDS = {
   SCANS: {
     GET_SCANS: "GET_SCANS",
   },
-  USER:{
-    GET_CURRENT_USER:'GET_CURRENT_USER'
-  }
+  USER: {
+    GET_CURRENT_USER: "GET_CURRENT_USER",
+  },
+  LEADS: {
+    CREATE_LEAD: "CREATE_LEAD",
+  },
 };

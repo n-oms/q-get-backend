@@ -47,3 +47,7 @@ export enum EnquiryServiceType {
   OTHER = "OTHER",
 }
 
+export enum EnquiryTrigger {
+  AUTOMATIC = "AUTOMATIC",
+  MANUAL = "MANUAL",
+}
