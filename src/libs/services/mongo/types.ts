@@ -31,6 +31,7 @@ export interface BankCard extends Document {
     title: string;
     items: string[];
   };
+  cardCode?:string
 }
 export type Otp = {
   phoneNumber: string;

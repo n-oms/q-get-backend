@@ -15,9 +15,9 @@ const cardSchema = new mongoose.Schema<BankCard>(
     },
     bankLogo: {
       s3Key: { type: String, required: false },
-      fileType: { type: String, required: false },  // Made optional
-      fileName: { type: String, required: false },  // Made optional
-      imageUrl: { type: String, required: false },  // Made optional
+      fileType: { type: String, required: false }, // Made optional
+      fileName: { type: String, required: false }, // Made optional
+      imageUrl: { type: String, required: false }, // Made optional
     },
     type: { type: String, enum: ["CODE", "IMAGE"], required: true },
     orientation: {
@@ -30,8 +30,12 @@ const cardSchema = new mongoose.Schema<BankCard>(
       title: { type: String, required: true },
       items: [{ type: String, required: true }],
     },
+    cardCode: {
+      type: String,
+      required: false,
+    },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export const Cards =
