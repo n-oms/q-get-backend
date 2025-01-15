@@ -12,7 +12,7 @@ export class LeadService {
   private readonly KEY_SIZE = 256;
   private readonly KEY_ALGORITHM = "aes-256-cbc";
   private readonly SECRET_KEY_FACTORY_ALGORITHM = "sha1";
-  private readonly BASE_URL = "https://sbi-dev7.sbicard.com/api-gateway/resource";
+  private readonly BASE_URL = process.env.SBI_LEAD_URL;
 
   constructor() {
     console.log("LeadService initialized with BASE_URL:", this.BASE_URL);
