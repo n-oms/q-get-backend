@@ -254,6 +254,7 @@ export class LeadService {
         aesKeyBase64String,
         ivHex
       );
+      console.log("Unparsed Data:",decrypted)
       const responseJson = JSON.parse(decrypted);
       console.log("createLead - Response decryption successful! Response Json is:",responseJson);
       console.log("createLead - Decrypted response:", JSON.stringify(responseJson.data, null, 2));
