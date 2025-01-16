@@ -202,7 +202,7 @@ export class LeadService {
         headers,
         "/oAuth/tokenGenPartner"
       );
-      console.log("login - Token generation API call successful");
+      console.log("login - Token generation API call successful! Api Response Data is:",apiResponse);
 
       console.log("login - Decrypting response");
       const decrypted = this.AES256Util.decryptAES(
@@ -213,7 +213,7 @@ export class LeadService {
       const responseJson = JSON.parse(decrypted);
       console.log(
         "login - Response decryption successful. Response JSON is :",
-        responseJson.data
+        responseJson
       );
       console.log("login - Response :", {
         token: responseJson.data.accessToken,
