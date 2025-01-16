@@ -20,7 +20,10 @@ export class LeadService {
 
   private RSAUtil = {
     encrypt: (data: string, publicKey: crypto.KeyObject, algorithm: string) => {
-      console.log("RSAUtil.encrypt - Starting encryption with algorithm:", algorithm);
+      console.log(
+        "RSAUtil.encrypt - Starting encryption with algorithm:",
+        algorithm
+      );
       try {
         const encrypted = crypto
           .publicEncrypt(
@@ -41,19 +44,24 @@ export class LeadService {
   };
 
   private AES256Util = {
-    decryptAES: (encryptedText: string, keyBase64: string, ivHex: string): string => {
+    decryptAES: (
+      encryptedText: string,
+      keyBase64: string,
+      ivHex: string
+    ): string => {
       console.log("AES256Util.decryptAES - Starting decryption");
       try {
         const key = Buffer.from(keyBase64, "base64");
         const iv = Buffer.from(ivHex, "hex");
         console.log("AES256Util.decryptAES - IV length:", iv.length);
-        
+
         const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
         const decrypted = Buffer.concat([
           decipher.update(Buffer.from(encryptedText, "base64")),
           decipher.final(),
         ]);
         console.log("AES256Util.decryptAES - Decryption successful");
+        console.log("Decrypted Data before toString conversion:", decrypted);
         return decrypted.toString("utf8");
       } catch (error) {
         console.error("AES256Util.decryptAES - Decryption failed:", error);
@@ -67,7 +75,7 @@ export class LeadService {
     try {
       const certPath = path.join(__dirname, inputFile);
       console.log("getPublicKey - Certificate path:", certPath);
-      
+
       const cert = fs.readFileSync(certPath);
       const publicKey = crypto.createPublicKey(cert);
       console.log("getPublicKey - Successfully loaded public key");
@@ -84,7 +92,10 @@ export class LeadService {
 
     try {
       const saltBytes = crypto.randomBytes(20);
-      console.log("performEncryption - Generated salt bytes length:", saltBytes.length);
+      console.log(
+        "performEncryption - Generated salt bytes length:",
+        saltBytes.length
+      );
 
       console.log("performEncryption - Deriving key with PBKDF2");
       const key = await util.promisify(crypto.pbkdf2)(
@@ -102,7 +113,10 @@ export class LeadService {
       const ivBytes = crypto.randomBytes(16);
       const ivBase64String = Buffer.from(ivBytes).toString("base64");
       const ivHex = Buffer.from(ivBytes).toString("hex");
-      console.log("performEncryption - Generated IV bytes length:", ivBytes.length);
+      console.log(
+        "performEncryption - Generated IV bytes length:",
+        ivBytes.length
+      );
 
       const cipher = crypto.createCipheriv(this.KEY_ALGORITHM, key, ivBytes);
       const encryptedText = Buffer.concat([
@@ -113,7 +127,9 @@ export class LeadService {
       console.log("performEncryption - Text encryption successful");
 
       const concatenatedIVAndAes = `${ivBase64String}|${aesKeyBase64String}`;
-      console.log("performEncryption - Starting RSA encryption of IV and AES key");
+      console.log(
+        "performEncryption - Starting RSA encryption of IV and AES key"
+      );
       const encodedToken = this.RSAUtil.encrypt(
         concatenatedIVAndAes,
         this.getPublicKey("sprint.pem"),
@@ -135,7 +151,10 @@ export class LeadService {
 
   private async postData(body: any, headers: any, endpoint: string) {
     console.log("postData - Starting API request to endpoint:", endpoint);
-    console.log("postData - Request headers:", JSON.stringify(headers, null, 2));
+    console.log(
+      "postData - Request headers:",
+      JSON.stringify(headers, null, 2)
+    );
     console.log("postData - Request body keys:", Object.keys(body));
 
     try {
@@ -192,15 +211,18 @@ export class LeadService {
         ivHex
       );
       const responseJson = JSON.parse(decrypted);
-      console.log("login - Response decryption successful. Response JSON is :",responseJson.data);
-      console.log("login - Response :",{
+      console.log(
+        "login - Response decryption successful. Response JSON is :",
+        responseJson.data
+      );
+      console.log("login - Response :", {
         token: responseJson.data.accessToken,
-        xSbicUserFgp: responseJson.data.xSbicUserFgp
+        xSbicUserFgp: responseJson.data.xSbicUserFgp,
       });
 
       return {
         token: responseJson.data.accessToken,
-        xSbicUserFgp: responseJson.data.xSbicUserFgp
+        xSbicUserFgp: responseJson.data.xSbicUserFgp,
       };
     } catch (error) {
       console.error("login - Login process failed:", error);
@@ -210,19 +232,25 @@ export class LeadService {
 
   async createLead(leadData: Partial<ILead>) {
     console.log("createLead - Starting lead creation process");
-    console.log("createLead - Input lead data:", JSON.stringify(leadData, null, 2));
+    console.log(
+      "createLead - Input lead data:",
+      JSON.stringify(leadData, null, 2)
+    );
 
     try {
       console.log("createLead - Initiating login");
       const loginResponse = await this.login();
-      console.log("createLead - Login successful! Response is:",loginResponse);
+      console.log("createLead - Login successful! Response is:", loginResponse);
 
       const requestData = {
         data: leadData,
         action: "LG-Create-Lead",
         type: "SPRINT_Partner",
       };
-      console.log("createLead - Prepared request data:", JSON.stringify(requestData, null, 2));
+      console.log(
+        "createLead - Prepared request data:",
+        JSON.stringify(requestData, null, 2)
+      );
 
       console.log("createLead - Starting request encryption");
       const { encodedText, encodedToken, aesKeyBase64String, ivHex } =
@@ -254,10 +282,16 @@ export class LeadService {
         aesKeyBase64String,
         ivHex
       );
-      console.log("Unparsed Data:",decrypted)
+      console.log("Unparsed Data:", decrypted);
       const responseJson = JSON.parse(decrypted);
-      console.log("createLead - Response decryption successful! Response Json is:",responseJson);
-      console.log("createLead - Decrypted response:", JSON.stringify(responseJson.data, null, 2));
+      console.log(
+        "createLead - Response decryption successful! Response Json is:",
+        responseJson
+      );
+      console.log(
+        "createLead - Decrypted response:",
+        JSON.stringify(responseJson.data, null, 2)
+      );
 
       console.log("createLead - Saving lead to MongoDB");
       const lead = await Leads.create({
@@ -279,10 +313,16 @@ export class LeadService {
   }
 
   async queryLeads(queryObject: Record<string, any> = {}) {
-    console.log("queryLeads - Starting query with filters:", JSON.stringify(queryObject, null, 2));
+    console.log(
+      "queryLeads - Starting query with filters:",
+      JSON.stringify(queryObject, null, 2)
+    );
     try {
       const leads = await Leads.find(queryObject);
-      console.log("queryLeads - Query successful, found records:", leads.length);
+      console.log(
+        "queryLeads - Query successful, found records:",
+        leads.length
+      );
       return leads;
     } catch (error) {
       console.error("queryLeads - Query failed:", error);
@@ -294,7 +334,10 @@ export class LeadService {
     console.log("getLeadById - Searching for lead:", leadId);
     try {
       const lead = await Leads.findOne({ leadID: leadId });
-      console.log("getLeadById - Search result:", lead ? "Lead found" : "Lead not found");
+      console.log(
+        "getLeadById - Search result:",
+        lead ? "Lead found" : "Lead not found"
+      );
       return lead;
     } catch (error) {
       console.error("getLeadById - Search failed:", error);
