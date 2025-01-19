@@ -93,6 +93,7 @@ export class WelcomeMessagePostApiHandler implements IHandler {
         return await WelcomeMessageTracker.findOneAndUpdate({
           phoneNumber,
           service,
+          lastSentAt: Date.now(),
         });
       }
     }
