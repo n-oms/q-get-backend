@@ -1,1 +1,5 @@
 export * from './get-current-user/handler'
+export * from './delete/handler'
+export * from './get-all/handler'
+export * from './patch/handler'
+export * from './put/handler'

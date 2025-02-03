@@ -6,7 +6,6 @@ import { IHandler } from "@/libs/types/common";
 import { validate } from "@/libs/validations/api";
 import { authorizeRequest } from "@/middlewares/authorizer/authorizer";
 import { Express } from "express";
-import { GetUserHandler } from "@/handlers/users";
 import { GetScanHandler } from "@/handlers/scans";
 import { CheckAuthorizationHandler } from "@/handlers/authorization";
 import { InvoiceApiPostHandler } from "@/handlers/invoice";
@@ -25,6 +24,7 @@ import { WelcomeMessagePostApiHandler } from "@/handlers/welcomeMessage";
 import { PartnerRegistartionPostApiHandler } from "@/handlers/partner-registration";
 import { GetInsightsHandler } from "@/handlers/insights";
 import { CreateLeadHandler } from "@/handlers/sbi-lead/handler";
+import { PatchUserHandler, DeleteUserHandler, GetAllUsersHandler, GetUserHandler, UpdateUserHandler } from "@/handlers/users";
 
 const MAP_KEY_PAIR = [
   [Operations.CREATE, HTTP_METHODS.POST],
@@ -77,5 +77,9 @@ function getAllRouteHandlers(): Array<IHandler> {
   routeHandlers.push(new PartnerRegistartionPostApiHandler());
   routeHandlers.push(new GetInsightsHandler());
   routeHandlers.push(new CreateLeadHandler());
+  routeHandlers.push(new PatchUserHandler());
+  routeHandlers.push(new DeleteUserHandler());
+  routeHandlers.push(new GetAllUsersHandler());
+  routeHandlers.push(new UpdateUserHandler());
   return routeHandlers;
 }

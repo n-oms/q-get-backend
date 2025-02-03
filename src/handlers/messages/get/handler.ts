@@ -31,9 +31,28 @@ export class GetMessagesHandler implements IHandler {
       if (!userInfo.phoneNumber) {
         throw new BadRequestExecption("Phone Number not provided");
       }
-      const userMessages = await Messages.find({
+
+      const query: any = {
         userId: userInfo.id || userInfo.phoneNumber,
+      };
+
+      // Add all query parameters to the query object
+      Object.entries(req.query).forEach(([key, value]) => {
+        if (key === 'createdAt') {
+          const [day, month, year] = (value as string).split('/');
+          // Create start and end of the day for exact date matching
+          const startDate = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+          const endDate = new Date(`${year}-${month}-${day}T23:59:59.999Z`);
+          query[key] = {
+            $gte: startDate,
+            $lte: endDate
+          };
+        } else {
+          query[key] = value;
+        }
       });
+
+      const userMessages = await Messages.find(query);
       return res.status(200).json(userMessages);
     } catch (error) {
       next(error);
