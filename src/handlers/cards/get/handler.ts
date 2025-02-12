@@ -25,8 +25,7 @@ export class GetCardsHandler implements IHandler {
 
   async handler(req: ApiRequest, res: ApiResponse, next) {
     try {
-      const query =
-        (req.query as Record<string, any>) || ({} as Record<string, any>);
+      const query = (req.query as Record<string, any>) || ({} as Record<string, any>);
       let result;
       if ("searchString" in query) {
         result = await this.cardsService.searchCards({
