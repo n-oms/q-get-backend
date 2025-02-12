@@ -14,7 +14,7 @@ import { GetDashboardDataHandler } from "@/handlers/dashboard";
 import { GetApplicationsDataHandler } from "@/handlers/applications";
 import { GetCardsHandler } from "@/handlers/cards/get/handler";
 import { CreateCardHandler } from "@/handlers/cards/post/handler";
-import { GetMessagesHandler, SendMessageHandler } from "@/handlers/messages";
+import { GetMessagesHandler, SendMessageHandler ,DeleteMessageHandler} from "@/handlers/messages";
 import { GetFaqsHandler } from "@/handlers/faqs/get/handler";
 import { BlogsPostHandler, GetBlogsHandler } from "@/handlers/blogs";
 import { GetUploadUrlHandler } from "@/handlers/getUploadUrl";
@@ -81,5 +81,6 @@ function getAllRouteHandlers(): Array<IHandler> {
   routeHandlers.push(new DeleteUserHandler());
   routeHandlers.push(new GetAllUsersHandler());
   routeHandlers.push(new UpdateUserHandler());
+  routeHandlers.push(new DeleteMessageHandler());
   return routeHandlers;
 }
