@@ -1,12 +1,17 @@
+import { ObjectId } from 'mongodb';
 import { Cards } from "../mongo/schema";
 
 export class CardService {
   async queryCards({ queryObject = {} }: { queryObject: Record<string, any> }) {
     const query: Record<string, any> = {};
 
+    // Handle _id conversion if present
+    if (queryObject._id && ObjectId.isValid(queryObject._id)) {
+      query._id = new ObjectId(queryObject._id.toString());
+    }
+
     // Handle categories
     if (queryObject.categories) {
-      // Support both array and comma-separated string
       const categories = Array.isArray(queryObject.categories)
         ? queryObject.categories
         : queryObject.categories.split(',');
@@ -35,7 +40,7 @@ export class CardService {
       }
     });
 
-    const cards = await Cards.find(query);
+    const cards = await Cards.find(query).lean();
     return cards;
   }
 
