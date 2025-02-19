@@ -65,8 +65,8 @@ export class OtpApiHandler implements IHandler {
           if (phoneNumber === GOOGLE_PLAY_TEST_AUTH_NUMBER) {
             return res.status(200).send({
               smsResponse: { status: "success" },
-              isExisting: true,
-              user: null,
+              isExisting: false,
+              user:null,
             });
           }
 
