@@ -11,6 +11,7 @@ export interface BankCard extends Document {
   cardId: string;
   title: string;
   link: string;
+  categories?: string[]
   bankName: string;
   imageUrl?: {
     s3Key: string;
@@ -31,7 +32,7 @@ export interface BankCard extends Document {
     title: string;
     items: string[];
   };
-  cardCode?:string
+  cardCode?: string
 }
 export type Otp = {
   phoneNumber: string;

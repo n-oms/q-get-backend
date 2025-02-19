@@ -17,4 +17,5 @@ export const env = {
     AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
     MESSAGE_QUEUE_NAME: process.env.MESSAGE_QUEUE_NAME,
     S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
+    ORG_ID:process.env.ORG_ID
 }

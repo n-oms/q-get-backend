@@ -4,6 +4,7 @@ import { BankCard } from "../types";
 const cardSchema = new mongoose.Schema<BankCard>(
   {
     cardId: { type: String },
+    categories: [{ type: String, required: false }],
     title: { type: String, required: true },
     link: { type: String, required: true },
     bankName: { type: String, required: true },
