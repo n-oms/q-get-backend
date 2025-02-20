@@ -35,7 +35,7 @@ export class WelcomeMessagePostApiHandler implements IHandler {
 
   async handler(req: ApiRequest, res: Response, next: NextFunction) {
     try {
-      const { phoneNumber } = req.userInfo
+      const { phoneNumber } = req.userInfo;
       const body = welcomeMessageApiSchema.parse(req.body);
       let result;
       switch (body.action) {
@@ -64,38 +64,45 @@ export class WelcomeMessagePostApiHandler implements IHandler {
     phoneNumber: string;
     service: WelcomeMessageAllowedServices;
   }) {
-    const welcomeMessageEntry = await WelcomeMessageTracker.findOne({
-      phoneNumber,
-      service
-    });
-    console.log("Welcome message entry", JSON.stringify(welcomeMessageEntry));
-    if (!welcomeMessageEntry) {
-      const smsResponse = await this.smsClient.sendWelcomeMessage({
-        to: phoneNumber,
+    try {
+      
+      const welcomeMessageEntry = await WelcomeMessageTracker.findOne({
+        phoneNumber,
+        service,
       });
-      console.log("NEW SMS RESPONSE", JSON.stringify(smsResponse));
-      if (smsResponse.ok) {
-        return await WelcomeMessageTracker.create({
-          phoneNumber,
-          lastSentAt: Date.now(),
-          service,
+
+      if (!welcomeMessageEntry) {
+        const smsResponse = await this.smsClient.sendWelcomeMessage({
+          to: phoneNumber,
         });
+
+        if (smsResponse.ok) {
+          return await WelcomeMessageTracker.create({
+            phoneNumber,
+            lastSentAt: Date.now(),
+            service,
+          });
+        }
       }
-    }
-    if (
-      this.isLastMessageExpired({ lastSentAt: welcomeMessageEntry.lastSentAt })
-    ) {
-      const smsResponse = await this.smsClient.sendWelcomeMessage({
-        to: phoneNumber,
-      });
-      console.log("SMS RESPONSE", JSON.stringify(smsResponse));
-      if (smsResponse.ok) {
-        return await WelcomeMessageTracker.findOneAndUpdate({
-          phoneNumber,
-          service,
-          lastSentAt: Date.now(),
+      if (
+        this.isLastMessageExpired({
+          lastSentAt: welcomeMessageEntry.lastSentAt,
+        })
+      ) {
+        const smsResponse = await this.smsClient.sendWelcomeMessage({
+          to: phoneNumber,
         });
+        console.log("SMS RESPONSE", JSON.stringify(smsResponse));
+        if (smsResponse.ok) {
+          return await WelcomeMessageTracker.findOneAndUpdate({
+            phoneNumber,
+            service,
+            lastSentAt: Date.now(),
+          });
+        }
       }
+    } catch (error) {
+      console.log("Error sending welcome message", error);
     }
   }
 
