@@ -66,7 +66,7 @@ export class OtpApiHandler implements IHandler {
             return res.status(200).send({
               smsResponse: { status: "success" },
               isExisting: true,
-              user: null,
+              user:await this.googlePlayService.getTestAccountDetails(),
             });
           }
 
