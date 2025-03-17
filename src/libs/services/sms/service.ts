@@ -14,6 +14,7 @@ import { OtpDBService } from "../otp/service";
 import { UserService } from "../user/service";
 import { Users } from "../mongo/schema";
 import { JwtService } from "../jwt/jwtService";
+import e from "express";
 
 export class SmsClient {
   private readonly apiKey: string;
@@ -63,10 +64,23 @@ export class SmsClient {
 
   // Need to remove message type from here
   private createMessageUrl(input: CreateMessageUrl) {
-    const { message, templateId, to } = input;
+    const { message, templateId, to, messageType } = input;
     const encodedMessage = encodeURIComponent(message);
-    const url = `${this.apiUrl}?channel=2.1&recipient=${to}&contentType=3.1&dr=false&msg=${encodedMessage}&user=${env.SMS_TATA_TEL_USERNAME}&pswd=${env.SMS_TATA_TEL_PASSWORD}&sender=${env.SMS_SENDER_ID}&PE_ID=${env.SMS_TATA_TEL_PE_ID}&Template_ID=${templateId}`;
-    return url;
+    if (messageType === MessageType.Otp) {
+      const data = {
+        key: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2N2Q3YmFkMTYzMGMwMzA3YjNiYWU2Nzc6NjdkN2JhZDE2MzBjMDMwN2IzYmFlNjc5OlFHRVRDQzo2NTJmYTQ0ZWYzMTc3NjdlOTdkYTMyNWUiLCJpYXQiOjE3NDIxOTcwMjF9.Dv6hvseKvtoo2Pl116csUZM1vcyo_vPHNdJRvU3Cibk',
+        message: encodedMessage,
+        to: to
+      };
+      const url = new URL('https://sms.pixabits.in/smsapi/sms/custom/send');
+      url.search = new URLSearchParams(data).toString();
+      return url.toString();
+    }
+    else {
+      const url = `${this.apiUrl}?channel=2.1&recipient=${to}&contentType=3.1&dr=false&msg=${encodedMessage}&user=${env.SMS_TATA_TEL_USERNAME}&pswd=${env.SMS_TATA_TEL_PASSWORD}&sender=${env.SMS_SENDER_ID}&PE_ID=${env.SMS_TATA_TEL_PE_ID}&Template_ID=${templateId}`;
+      return url;
+
+    }
   }
 
   async initOtpVerification(
@@ -183,9 +197,9 @@ export class SmsClient {
 
     // Getting the verified user info from the database
     const user = await Users.findOne({ phoneNumber })
-   
+
     resultObj.user = user ? user.toJSON() : null
-    
+
     if (generateToken) {
       const token = await this.jwtService.createUserToken({ phoneNumber })
       resultObj.token = token
