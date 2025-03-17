@@ -20,8 +20,8 @@ export class SmsClient {
   private readonly apiKey: string;
   private readonly apiUrl: string;
   private readonly otpDbClient: OtpDBService;
-  private readonly userService: UserService
-  private readonly jwtService: JwtService
+  private readonly userService: UserService;
+  private readonly jwtService: JwtService;
   static client: SmsClient;
   constructor() {
     this.apiKey = env.SMS_API_KEY;
@@ -35,12 +35,12 @@ export class SmsClient {
     this.initOtpVerification = this.initOtpVerification.bind(this);
     this.verifyOtp = this.verifyOtp.bind(this);
     this.send = this.send.bind(this);
-    this.jwtService = new JwtService()
-    this.userService = new UserService()
+    this.jwtService = new JwtService();
+    this.userService = new UserService();
   }
 
   async send(input: RequestInfo | URL) {
-    return await fetch(input)
+    return await fetch(input);
   }
 
   static getClient() {
@@ -65,28 +65,31 @@ export class SmsClient {
   // Need to remove message type from here
   private createMessageUrl(input: CreateMessageUrl) {
     const { message, templateId, to, messageType } = input;
-    const encodedMessage = encodeURIComponent(message);
     if (messageType === MessageType.Otp) {
       const data = {
-        key: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2N2Q3YmFkMTYzMGMwMzA3YjNiYWU2Nzc6NjdkN2JhZDE2MzBjMDMwN2IzYmFlNjc5OlFHRVRDQzo2NTJmYTQ0ZWYzMTc3NjdlOTdkYTMyNWUiLCJpYXQiOjE3NDIxOTcwMjF9.Dv6hvseKvtoo2Pl116csUZM1vcyo_vPHNdJRvU3Cibk',
-        message: encodedMessage,
-        to: to
+        key: process.env.SMS_OTP_KEY,
+        text: message,
+        phoneno: to,
+        senderId: process.env.SMS_OTP_SENDER_ID,
+        tempDltId: process.env.SMS_OTP_DLT_ID,
+        route: "Domestic",
+        trans: "1",
+        unicode: "0",
+        flash: "false",
+        tiny: "false",
       };
-      const url = new URL('https://sms.pixabits.in/smsapi/sms/custom/send');
+      const url = new URL("https://sms.pixabits.in/smsapi/sms/get/send");
       url.search = new URLSearchParams(data).toString();
       return url.toString();
-    }
-    else {
-      const url = `${this.apiUrl}?channel=2.1&recipient=${to}&contentType=3.1&dr=false&msg=${encodedMessage}&user=${env.SMS_TATA_TEL_USERNAME}&pswd=${env.SMS_TATA_TEL_PASSWORD}&sender=${env.SMS_SENDER_ID}&PE_ID=${env.SMS_TATA_TEL_PE_ID}&Template_ID=${templateId}`;
-      return url;
-
+    } else {
+      const encodedMessage = encodeURIComponent(message);
+      return `${this.apiUrl}?channel=2.1&recipient=${to}&contentType=3.1&dr=false&msg=${encodedMessage}&user=${env.SMS_TATA_TEL_USERNAME}&pswd=${env.SMS_TATA_TEL_PASSWORD}&sender=${env.SMS_SENDER_ID}&PE_ID=${env.SMS_TATA_TEL_PE_ID}&Template_ID=${templateId}`;
     }
   }
 
   async initOtpVerification(
-    input: SendOtp,
+    input: SendOtp
   ): Promise<InitOtpVerificationResponse> {
-
     // Getting existing otp entry from the database
     const otpEntry = await this.otpDbClient.getOtpEntry(input.to);
 
@@ -118,8 +121,8 @@ export class SmsClient {
     }
 
     const userInfo = await this.userService.getUserByPhoneNumber({
-      phoneNumber: input.to
-    })
+      phoneNumber: input.to,
+    });
 
     if (!otpEntry?.verified && otpEntry?.code) {
       const newOtpResponse = await this.sendOtp({
@@ -138,7 +141,7 @@ export class SmsClient {
           status: OTP_RESPONSE_CODES.OTP_SENT,
           data: updatedOtpEntry,
           isNewEntry: false,
-          userInfo
+          userInfo,
         };
       }
     }
@@ -161,7 +164,7 @@ export class SmsClient {
         status: OTP_RESPONSE_CODES.OTP_SENT,
         data: updatedOtpEntry,
         isNewEntry: false,
-        userInfo
+        userInfo,
       };
     }
 
@@ -183,29 +186,29 @@ export class SmsClient {
       return { status: OTP_RESPONSE_CODES.OTP_ALREADY_VERIFIED };
     }
 
-    const resultObj: Record<string, any> = {}
+    const resultObj: Record<string, any> = {};
     const isValid = otpEntry.code === code;
 
     if (!isValid) {
       return { status: OTP_RESPONSE_CODES.INVALID_OTP_CODE };
     }
 
-    resultObj.isValid = isValid
-    resultObj.status = OTP_RESPONSE_CODES.OTP_VERIFIED
+    resultObj.isValid = isValid;
+    resultObj.status = OTP_RESPONSE_CODES.OTP_VERIFIED;
 
     await this.otpDbClient.updateOtpEntry({ phoneNumber, verified: true });
 
     // Getting the verified user info from the database
-    const user = await Users.findOne({ phoneNumber })
+    const user = await Users.findOne({ phoneNumber });
 
-    resultObj.user = user ? user.toJSON() : null
+    resultObj.user = user ? user.toJSON() : null;
 
     if (generateToken) {
-      const token = await this.jwtService.createUserToken({ phoneNumber })
-      resultObj.token = token
+      const token = await this.jwtService.createUserToken({ phoneNumber });
+      resultObj.token = token;
     }
 
-    return resultObj
+    return resultObj;
   }
 
   async sendOtp({ to, code }: { to: string; code: string }) {
@@ -239,7 +242,7 @@ export class SmsClient {
   private generateOtp(length: number) {
     const otp = crypto.randomInt(
       Math.pow(10, length - 1),
-      Math.pow(10, length),
+      Math.pow(10, length)
     );
     return otp.toString();
   }
