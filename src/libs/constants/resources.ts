@@ -23,5 +23,13 @@ export const HTTP_RESOURCES = {
   INSIGHTS: "insights",
   CREATE_LEAD: "sbi-lead",
   USER: 'user',
-  USERS:'users'
+  USERS: 'users',
+  NOTIFICATIONS: {
+    GET_NOTIFICATIONS: "notifications",
+    CREATE_NOTIFICATION: "notifications",
+    UPDATE_NOTIFICATION: "notifications/:id",
+    DELETE_NOTIFICATION: "notifications/:id",
+    MARK_ALL_READ: "notifications/mark-all-read",
+    GET_UNREAD_COUNT: "notifications/unread-count",
+  },
 };
