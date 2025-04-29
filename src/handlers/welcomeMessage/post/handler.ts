@@ -1,8 +1,9 @@
+// src/handlers/welcomeMessage/post/handler.ts
 import { HTTP_RESOURCES } from "@/libs/constants/resources";
 import { Operations } from "@/libs/enums/common";
 import { BadRequestExecption } from "@/libs/error/error";
 import { WelcomeMessageTracker } from "@/libs/services/mongo/models/welcomeMessageTracker";
-import { SmsClient } from "@/libs/services/sms/service";
+import { WhatsappService } from "@/libs/services/whatsapp/service";
 import { WELCOME_MESSAGE_EXPIRATION_TIME } from "@/libs/services/sms/utils";
 import { ApiRequest, IHandler } from "@/libs/types/common";
 import { ClassUtils } from "@/libs/utils/classUtils";
@@ -20,7 +21,7 @@ export class WelcomeMessagePostApiHandler implements IHandler {
   resource: string;
   validations: any[];
   isAuthorizedAccess?: boolean;
-  smsClient: SmsClient;
+  whatsappService: WhatsappService;
   constructor() {
     this.operation = Operations.INVOKE;
     this.isIdempotent = false;
@@ -29,7 +30,7 @@ export class WelcomeMessagePostApiHandler implements IHandler {
     this.isAuthorizedAccess = true;
     this.validations = [];
     this.handler = this.handler.bind(this);
-    this.smsClient = new SmsClient();
+    this.whatsappService = new WhatsappService();
     ClassUtils.bindMethods(this);
   }
 
@@ -72,11 +73,11 @@ export class WelcomeMessagePostApiHandler implements IHandler {
       });
 
       if (!welcomeMessageEntry) {
-        const smsResponse = await this.smsClient.sendWelcomeMessage({
+        const whatsappResponse = await this.whatsappService.sendWelcomeMessage({
           to: phoneNumber,
         });
 
-        if (smsResponse.ok) {
+        if (whatsappResponse.ok) {
           return await WelcomeMessageTracker.create({
             phoneNumber,
             lastSentAt: Date.now(),
@@ -89,11 +90,11 @@ export class WelcomeMessagePostApiHandler implements IHandler {
           lastSentAt: welcomeMessageEntry.lastSentAt,
         })
       ) {
-        const smsResponse = await this.smsClient.sendWelcomeMessage({
+        const whatsappResponse = await this.whatsappService.sendWelcomeMessage({
           to: phoneNumber,
         });
-        console.log("SMS RESPONSE", JSON.stringify(smsResponse));
-        if (smsResponse.ok) {
+        console.log("WHATSAPP RESPONSE", JSON.stringify(whatsappResponse));
+        if (whatsappResponse.ok) {
           return await WelcomeMessageTracker.findOneAndUpdate({
             phoneNumber,
             service,
