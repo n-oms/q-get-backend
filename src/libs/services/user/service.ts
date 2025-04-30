@@ -103,6 +103,11 @@ export class UserService {
       message,
       queueUrl: SQS_QUEUES.RAISE_INVOICE_REQUEST_QUEUE.url,
     });
-    return response
+    return response;
+  }
+
+  async getVendorByVendorId(vendorId: string) {
+    const vendor = await Users.findOne({ vendorId });
+    return vendor ? vendor.toJSON() : null;
   }
 }

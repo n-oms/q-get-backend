@@ -11,7 +11,7 @@ export interface BankCard extends Document {
   cardId: string;
   title: string;
   link: string;
-  categories?: string[]
+  categories?: string[];
   bankName: string;
   imageUrl?: {
     s3Key: string;
@@ -32,7 +32,7 @@ export interface BankCard extends Document {
     title: string;
     items: string[];
   };
-  cardCode?: string
+  cardCode?: string;
 }
 export type Otp = {
   phoneNumber: string;
@@ -55,6 +55,7 @@ export type User = {
   userType: UserType;
   isWelcomeMessageSent: boolean;
   status: UserStatus;
+  branchId: string;
   scannedVendorId?: string;
   isVendorRegistrationRequestSent?: boolean;
   vendorRegistrationStatus?: VendorRegistrationStatus;
@@ -70,6 +71,7 @@ export type Scans = {
   bankId: string;
   phoneNumber: string;
   name: string;
+  branchId: string;
 };
 
 export type Application = {
@@ -139,7 +141,7 @@ export type BlogPost = {
   description: string;
   content: string;
   imageUrl?: string;
-  category: 'CREDIT_CARD' | 'LOAN' | 'INSURANCE' | 'CIBIL' | 'FINANCIAL_TIPS';
+  category: "CREDIT_CARD" | "LOAN" | "INSURANCE" | "CIBIL" | "FINANCIAL_TIPS";
   tags: string[];
   author: {
     name: string;
@@ -155,7 +157,7 @@ export type BlogPost = {
     keywords: string[];
     canonicalUrl?: string;
   };
-}
+};
 
 export type EnquiryRequest = {
   id: string;

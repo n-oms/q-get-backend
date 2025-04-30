@@ -13,7 +13,7 @@ import {
 } from "@/libs/types/common";
 import { OtpApiHandlerRequest, OtpHandlerActions } from "./types";
 import { otpPostApiSchema } from "./validation";
-import { Scans } from "@/libs/services/mongo/models";
+import { Scans, Users } from "@/libs/services/mongo/models";
 import { UserType } from "@/libs/services/mongo/enums";
 import {
   GOOGLE_PLAY_TEST_AUTH_NUMBER,
@@ -66,7 +66,7 @@ export class OtpApiHandler implements IHandler {
             return res.status(200).send({
               smsResponse: { status: "success" },
               isExisting: true,
-              user:await this.googlePlayService.getTestAccountDetails(),
+              user: await this.googlePlayService.getTestAccountDetails(),
             });
           }
 
@@ -146,7 +146,6 @@ export class OtpApiHandler implements IHandler {
       next(error);
     }
   }
-
   async postProcessOtpVerification({
     name,
     phoneNumber,
@@ -156,12 +155,16 @@ export class OtpApiHandler implements IHandler {
     scannedVendorId: string;
     name: string;
   }) {
+    const scannedVendor = await this.userService.getVendorByVendorId(
+      scannedVendorId
+    );
     if (scannedVendorId) {
       await Scans.create({
         phoneNumber,
         vendorId: scannedVendorId,
         name,
         userId: phoneNumber,
+        branchId: scannedVendor.branchId,
       });
     }
   }

@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema<User>(
     name: String,
     email: String,
     scannedVendorId: String,
+    branchId: String,
     vendorId: {
       type: String,
       required: false,
@@ -44,10 +45,10 @@ const userSchema = new mongoose.Schema<User>(
       attachment: mongoose.Schema.Types.Mixed,
       vendorPhoto: mongoose.Schema.Types.Mixed,
       businessName: String,
-      alternatePhone: String
+      alternatePhone: String,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export const Users =

@@ -6,13 +6,14 @@ export const scansSchema = new mongoose.Schema<ScanType>(
     name: String,
     userId: String,
     vendorId: String,
+    branchId: String,
     bankId: {
       type: String,
       required: false,
     },
     phoneNumber: String,
   },
-  { timestamps: true },
+  { timestamps: true, strict: false }
 );
 
 export const Scans =
