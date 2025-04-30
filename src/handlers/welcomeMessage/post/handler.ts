@@ -45,13 +45,14 @@ export class WelcomeMessagePostApiHandler implements IHandler {
             result = await this.sendWelcomMessage({
               phoneNumber,
               service: body.service,
+              campaignName: body.campaignName, 
             });
           }
           break;
         default:
           throw new BadRequestExecption("Invalid action");
       }
-
+  
       return res.status(200).json(result);
     } catch (error) {
       next(error);
@@ -61,12 +62,13 @@ export class WelcomeMessagePostApiHandler implements IHandler {
   async sendWelcomMessage({
     phoneNumber,
     service,
+    campaignName = "Welcome User Message",
   }: {
     phoneNumber: string;
     service: WelcomeMessageAllowedServices;
+    campaignName?: string;
   }) {
     try {
-      
       const welcomeMessageEntry = await WelcomeMessageTracker.findOne({
         phoneNumber,
         service,
@@ -75,6 +77,7 @@ export class WelcomeMessagePostApiHandler implements IHandler {
       if (!welcomeMessageEntry) {
         const whatsappResponse = await this.whatsappService.sendWelcomeMessage({
           to: phoneNumber,
+          campaignName,
         });
 
         if (whatsappResponse.ok) {
@@ -92,6 +95,7 @@ export class WelcomeMessagePostApiHandler implements IHandler {
       ) {
         const whatsappResponse = await this.whatsappService.sendWelcomeMessage({
           to: phoneNumber,
+          campaignName,
         });
         console.log("WHATSAPP RESPONSE", JSON.stringify(whatsappResponse));
         if (whatsappResponse.ok) {

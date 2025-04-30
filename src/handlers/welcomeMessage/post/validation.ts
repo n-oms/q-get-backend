@@ -11,14 +11,9 @@ export enum WelcomeMessageAllowedServices {
     Loans = "loans",
     Insurances = "insurances"
 }
-export enum CampaignNames {
-  VENDOR_WELCOME_MESSAGE = "Vendor Welcome Message",
-  WELCOME_USER_MESSAGE = "Welcome User Message",
-}
-
 
 export const welcomeMessageApiSchema = z.object({
   action: z.nativeEnum(WelcomeMessageTrackerApiActions),
   service: z.nativeEnum(WelcomeMessageAllowedServices),
-  templateId: z.nativeEnum(CampaignNames).optional(),
+  campaignName: z.string().optional(),
 });

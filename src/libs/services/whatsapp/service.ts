@@ -6,21 +6,21 @@ import { ClassUtils } from "@/libs/utils/classUtils";
 export class WhatsappService {
   private readonly baseURL: string;
   private readonly apiKey: string;
-  
+
   constructor() {
     this.baseURL = env.WHATSAPP_API_URL;
     this.apiKey = env.WHATSAPP_API_KEY;
     ClassUtils.bindMethods(this);
   }
-  
-  async sendWelcomeMessage({ to }: { to: string }) {
+
+  async sendWelcomeMessage({ to, campaignName = "Welcome User Message" }: { to: string; campaignName?: string }) {
     return await this.sendMessage({
       to,
       parameters: [to, "https://q-get.in"],
-      campaignName: "Vendor Welcome Message",
+      campaignName,
     });
   }
-  
+
   async sendMessage({
     campaignName,
     to,
@@ -44,7 +44,7 @@ export class WhatsappService {
       return { ok: false, error };
     }
   }
-  
+
   private prepareBody({
     apiKey,
     campaignName,
