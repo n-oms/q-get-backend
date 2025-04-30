@@ -172,3 +172,15 @@ export type WelcomeMessageTracker = {
   service: string;
   lastSentAt: number;
 };
+
+export type Notification = {
+  id: string;
+  userId: string;
+  title: string;
+  message: string;
+  type: "system" | "user" | "promo" | "alert";
+  status: "read" | "unread";
+  additionalData?: Record<string, any>;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
