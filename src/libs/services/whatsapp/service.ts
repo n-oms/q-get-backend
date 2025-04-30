@@ -14,9 +14,13 @@ export class WhatsappService {
   }
 
   async sendWelcomeMessage({ to, campaignName = "Welcome User Message" }: { to: string; campaignName?: string }) {
+    let parameters: string[] = [];
+    if (campaignName === "Vendor Welcome Message") {
+      parameters = [to, "https://q-get.in"];
+    }
     return await this.sendMessage({
       to,
-      parameters: [to, "https://q-get.in"],
+      parameters,
       campaignName,
     });
   }
