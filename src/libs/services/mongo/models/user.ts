@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema<User>(
       alternatePhone: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true , strict: false}
 );
 
 export const Users =

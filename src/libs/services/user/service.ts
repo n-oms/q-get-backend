@@ -68,7 +68,7 @@ export class UserService {
       isWelcomeMessageSent: false,
       scannedVendorId,
       vendorRegistrationStatus: VendorRegistrationStatus.NOT_APPLIED,
-      scannedBranchId,
+      branchId:scannedBranchId,
     });
     return user;
   }
