@@ -120,10 +120,14 @@ export class OtpApiHandler implements IHandler {
             !result.user &&
             body.deviceType === DeviceType.Web
           ) {
+            const scannedVendor = await this.userService.getVendorByVendorId(
+              body.scannedVendorId
+            );
             result.user = await this.userService.createCustomerUser({
               phoneNumber,
               name: body.name,
               scannedVendorId: body.scannedVendorId,
+              scannedBranchId: scannedVendor.branchId,
             });
           }
 

@@ -52,10 +52,12 @@ export class UserService {
     phoneNumber,
     name,
     scannedVendorId,
+    scannedBranchId,
   }: {
     phoneNumber: string;
     name: string;
     scannedVendorId?: string;
+    scannedBranchId?: string;
   }) {
     const user = await Users.create({
       id: phoneNumber,
@@ -66,6 +68,7 @@ export class UserService {
       isWelcomeMessageSent: false,
       scannedVendorId,
       vendorRegistrationStatus: VendorRegistrationStatus.NOT_APPLIED,
+      scannedBranchId,
     });
     return user;
   }
@@ -107,7 +110,9 @@ export class UserService {
   }
 
   async getVendorByVendorId(vendorId: string) {
-    const vendor = await Users.findOne({ vendorId });
-    return vendor ? vendor.toJSON() : null;
+    console.log('Searching for vendorId:', vendorId);
+    const vendor = await Users.findOne({ vendorId }).lean();
+    console.log('Found vendor:', vendor);
+    return vendor;
   }
 }
