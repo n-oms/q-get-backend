@@ -1,8 +1,8 @@
 import crypto from "crypto";
+import axios from "axios";
 import { OTP_RESPONSE_CODES } from "./utils";
 import { templates } from "./templates";
 import {
-  CreateMessageUrl,
   InitOtpVerificationResponse,
   MessageType,
   SendOtp,
@@ -14,21 +14,23 @@ import { OtpDBService } from "../otp/service";
 import { UserService } from "../user/service";
 import { Users } from "../mongo/schema";
 import { JwtService } from "../jwt/jwtService";
-import e from "express";
 
 export class SmsClient {
   private readonly apiKey: string;
-  private readonly apiUrl: string;
+  private readonly clientId: string;
+  private readonly senderId: string;
+  private readonly apiUrl: string = "http://control.msg24x7.com/api/v2/SendSMS";
   private readonly otpDbClient: OtpDBService;
   private readonly userService: UserService;
   private readonly jwtService: JwtService;
   static client: SmsClient;
+
   constructor() {
-    this.apiKey = env.SMS_API_KEY;
-    this.apiUrl = env.SMS_API_URL;
+    this.apiKey = env.SMS_OTP_API_KEY;
+    this.clientId = env.SMS_CLIENT_ID;
+    this.senderId = env.SMS_OTP_SENDER_ID;
     this.otpDbClient = new OtpDBService();
     this.sendWelcomeMessage = this.sendWelcomeMessage.bind(this);
-    this.createMessageUrl = this.createMessageUrl.bind(this);
     this.sendOtp = this.sendOtp.bind(this);
     this.getOtpTemplate = this.getOtpTemplate.bind(this);
     this.generateOtp = this.generateOtp.bind(this);
@@ -39,10 +41,6 @@ export class SmsClient {
     this.userService = new UserService();
   }
 
-  async send(input: RequestInfo | URL) {
-    return await fetch(input);
-  }
-
   static getClient() {
     if (!SmsClient.client) {
       SmsClient.client = new SmsClient();
@@ -50,41 +48,50 @@ export class SmsClient {
     return SmsClient.client;
   }
 
+  async send({ message, mobileNumber, templateId }: { message: string; mobileNumber: string; templateId: string }) {
+    try {
+      let cleanNumber = mobileNumber.replace('+', '').trim();
+      if (cleanNumber.startsWith('91')) {
+        cleanNumber = cleanNumber.substring(2);
+      }
+      const formattedNumber = `91${cleanNumber}`;
+
+      const response = await axios.post(this.apiUrl, {
+        message,
+        mobileNumbers: formattedNumber,
+        templateId,
+        apiKey: this.apiKey,
+        clientId: this.clientId,
+        senderId: this.senderId
+      });
+
+      console.log("URL:", this.apiUrl);
+      console.log("Request Body:", {
+        message,
+        mobileNumbers: formattedNumber,
+        templateId,
+        apiKey: this.apiKey,
+        clientId: this.clientId,
+        senderId: this.senderId
+      });
+
+
+      return response.data;
+    } catch (error) {
+      console.error("SMS sending failed:", error);
+      throw error;
+    }
+  }
+
   async sendWelcomeMessage({ to }: SendWelcomeMessage) {
     const template = templates.welcomeMessage;
     const templateId = env.SMS_WELCOME_TEMPLATE_ID;
-    const url = this.createMessageUrl({
-      to,
-      message: template,
-      messageType: MessageType.WelcomeMessage,
-      templateId,
-    });
-    return await this.send(url);
-  }
 
-  // Need to remove message type from here
-  private createMessageUrl(input: CreateMessageUrl) {
-    const { message, templateId, to, messageType } = input;
-    if (messageType === MessageType.Otp) {
-      const data = {
-        key: process.env.SMS_OTP_KEY,
-        text: message,
-        phoneno: to,
-        senderId: process.env.SMS_OTP_SENDER_ID,
-        tempDltId: process.env.SMS_OTP_DLT_ID,
-        route: "Domestic",
-        trans: "1",
-        unicode: "0",
-        flash: "false",
-        tiny: "false",
-      };
-      const url = new URL("https://sms.pixabits.in/smsapi/sms/get/send");
-      url.search = new URLSearchParams(data).toString();
-      return url.toString();
-    } else {
-      const encodedMessage = encodeURIComponent(message);
-      return `${this.apiUrl}?channel=2.1&recipient=${to}&contentType=3.1&dr=false&msg=${encodedMessage}&user=${env.SMS_TATA_TEL_USERNAME}&pswd=${env.SMS_TATA_TEL_PASSWORD}&sender=${env.SMS_SENDER_ID}&PE_ID=${env.SMS_TATA_TEL_PE_ID}&Template_ID=${templateId}`;
-    }
+    return await this.send({
+      message: template,
+      mobileNumber: to,
+      templateId
+    });
   }
 
   async initOtpVerification(
@@ -215,22 +222,16 @@ export class SmsClient {
     const template = this.getOtpTemplate(code);
     const templateId = env.SMS_OTP_TEMPLATE_ID;
 
-    const url = this.createMessageUrl({
-      to,
-      message: template,
-      messageType: MessageType.Otp,
-      templateId,
-    });
-
     try {
-      const res = await this.send(url);
+      const response = await this.send({
+        message: template,
+        mobileNumber: to,
+        templateId
+      });
 
-      if (!res.ok) {
-        throw new Error("Failed to send OTP");
-      }
-      return await res.json();
+      return response;
     } catch (error) {
-      console.error(error);
+      console.error("Failed to send OTP:", error);
       throw error;
     }
   }
@@ -246,16 +247,15 @@ export class SmsClient {
     );
     return otp.toString();
   }
+
   async sendVendorWelcomeMessage({ to }: { to: string }) {
     const template = templates.vendorWelcomeMessage;
     const templateId = env.SMS_VENDOR_TEMPLATE_ID;
-    const url = this.createMessageUrl({
-      to,
-      message: template,
-      messageType: MessageType.WelcomeMessage,
-      templateId,
-    });
 
-    return await this.send(url);
+    return await this.send({
+      message: template,
+      mobileNumber: to,
+      templateId
+    });
   }
 }
