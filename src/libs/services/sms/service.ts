@@ -74,7 +74,8 @@ export class SmsClient {
         clientId: this.clientId,
         senderId: this.senderId
       });
-
+      console.log("RES ",response)
+      console.log("RES DATA:",response.data)
 
       return response.data;
     } catch (error) {
