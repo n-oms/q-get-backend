@@ -62,7 +62,7 @@ export class WelcomeMessagePostApiHandler implements IHandler {
   async sendWelcomMessage({
     phoneNumber,
     service,
-    campaignName = "Welcome User Message",
+    campaignName = "User Welcome Message New",
   }: {
     phoneNumber: string;
     service: WelcomeMessageAllowedServices;

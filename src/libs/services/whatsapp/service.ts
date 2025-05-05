@@ -13,7 +13,7 @@ export class WhatsappService {
     ClassUtils.bindMethods(this);
   }
 
-  async sendWelcomeMessage({ to, campaignName = "Welcome User Message" }: { to: string; campaignName?: string }) {
+  async sendWelcomeMessage({ to, campaignName = "User Welcome Message New" }: { to: string; campaignName?: string }) {
     let parameters: string[] = [];
     if (campaignName === "Vendor Welcome Message") {
       parameters = [to, "https://q-get.in"];
