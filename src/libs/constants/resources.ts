@@ -22,8 +22,8 @@ export const HTTP_RESOURCES = {
   PARTNER_REGISTRATION: "partnerRegistration",
   INSIGHTS: "insights",
   CREATE_LEAD: "sbi-lead",
-  USER: 'user',
-  USERS: 'users',
+  USER: "user",
+  USERS: "users",
   NOTIFICATIONS: {
     GET_NOTIFICATIONS: "notifications",
     CREATE_NOTIFICATION: "notifications",
@@ -32,4 +32,5 @@ export const HTTP_RESOURCES = {
     MARK_ALL_READ: "notifications/mark-all-read",
     GET_UNREAD_COUNT: "notifications/unread-count",
   },
+  LMS_USERS: "lmsUsers",
 };

@@ -184,3 +184,10 @@ export type Notification = {
   createdAt?: Date;
   updatedAt?: Date;
 };
+
+export type LmsUser = {
+  email: string;
+  username: string;
+  name: string;
+  password: string;
+};

@@ -14,7 +14,11 @@ import { GetDashboardDataHandler } from "@/handlers/dashboard";
 import { GetApplicationsDataHandler } from "@/handlers/applications";
 import { GetCardsHandler } from "@/handlers/cards/get/handler";
 import { CreateCardHandler } from "@/handlers/cards/post/handler";
-import { GetMessagesHandler, SendMessageHandler, DeleteMessageHandler } from "@/handlers/messages";
+import {
+  GetMessagesHandler,
+  SendMessageHandler,
+  DeleteMessageHandler,
+} from "@/handlers/messages";
 import { GetFaqsHandler } from "@/handlers/faqs/get/handler";
 import { BlogsPostHandler, GetBlogsHandler } from "@/handlers/blogs";
 import { GetUploadUrlHandler } from "@/handlers/getUploadUrl";
@@ -24,7 +28,13 @@ import { WelcomeMessagePostApiHandler } from "@/handlers/welcomeMessage";
 import { PartnerRegistartionPostApiHandler } from "@/handlers/partner-registration";
 import { GetInsightsHandler } from "@/handlers/insights";
 import { CreateLeadHandler } from "@/handlers/sbi-lead/handler";
-import { PatchUserHandler, DeleteUserHandler, GetAllUsersHandler, GetUserHandler, UpdateUserHandler } from "@/handlers/users";
+import {
+  PatchUserHandler,
+  DeleteUserHandler,
+  GetAllUsersHandler,
+  GetUserHandler,
+  UpdateUserHandler,
+} from "@/handlers/users";
 // Import the handlers
 import {
   GetNotificationsHandler,
@@ -32,8 +42,9 @@ import {
   CreateNotificationHandler,
   MarkAllReadHandler,
   UpdateNotificationHandler,
-  DeleteNotificationHandler
-} from '@/handlers/notifications';
+  DeleteNotificationHandler,
+} from "@/handlers/notifications";
+import { LmsUserHandler } from "@/handlers/lms-users";
 
 const MAP_KEY_PAIR = [
   [Operations.CREATE, HTTP_METHODS.POST],
@@ -97,5 +108,6 @@ function getAllRouteHandlers(): Array<IHandler> {
   routeHandlers.push(new MarkAllReadHandler());
   routeHandlers.push(new UpdateNotificationHandler());
   routeHandlers.push(new DeleteNotificationHandler());
+  routeHandlers.push(new LmsUserHandler());
   return routeHandlers;
 }
